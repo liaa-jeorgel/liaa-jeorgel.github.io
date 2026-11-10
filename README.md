@@ -22,41 +22,43 @@ Abrir http://localhost:8000. Encerrar com Ctrl+C. Também é possível abrir `in
 - `assets/style.css`: estilos responsivos e variáveis de cores, espaçamentos e tipografia em `:root`.
 - `assets/main.js`: menu móvel com estado acessível, fecho por ligação e tecla Escape.
 - `assets/favicon.svg`: ícone original, sem logótipos institucionais.
-- `assets/social.svg`: arte de partilha; algumas plataformas não aceitam SVG em Open Graph. Para compatibilidade ampla, exportar para PNG 1200 × 630 e actualizar `og:image` antes de divulgar.
+- `assets/social.png`: imagem de partilha PNG 1200 × 630 usada em `og:image`. O SVG anterior é preservado como arte de origem da primeira versão.
 - `materiais/`: destino dos relatórios e imagens reais; ficheiros ainda não fornecidos.
 - `.nojekyll`: permite servir os ficheiros directamente pelo GitHub Pages.
 
 O conteúdo, os links, as âncoras e os detalhes expansíveis funcionam sem JavaScript. Sem JavaScript, o menu permanece visível também no telemóvel.
 
-## Fidelidade científica e informações pendentes
+## Estado científico desta revisão — 10/11/2026
 
-O único ficheiro encontrado no repositório antes desta implementação foi o README de apresentação. O pedido forneceu identificação, escopo, métodos, métricas e a informação de que a última actividade foi a construção da série temporal multivariada, antes do treino. Não foram encontrados relatórios, base de dados, código de processamento, imagens ou apresentações que comprovem a execução.
+A aquisição, auditoria, limpeza e integração e construção da série temporal multivariada estão **Concluídas**, conforme os dados do relatório de consolidação fornecidos pelo autor no pedido desta revisão. A actividade actual é a **consolidação e demonstração da série temporal multivariada**. A próxima fase é a baseline de persistência; treino, validação e avaliação de Random Forest e LSTM continuam planeados.
 
-Por isso:
+Resultados atribuídos ao relatório: 50.904 instantes horários UTC; 49.896 instantes com PM2.5; 39 atributos temporais; cinco variáveis meteorológicas, incluindo pressão **ao nível do mar**. As amostras elegíveis/excluídas são 49.124/1.780 (1 h), 49.068/1.836 (3 h) e 48.984/1.920 (6 h), em universos independentes de 50.904 origens por horizonte. O relatório regista 240/240 verificações e 1.200 instantes amostrados; o site não executou uma nova auditoria científica destes dados.
 
-- Não se publica data de actualização do projecto nem etapa actual como factos confirmados.
-- As oito etapas metodológicas aparecem como **Planeada**, enquanto estados documentais de execução não forem fornecidos. Isto representa o plano, sem afirmar que etapas anteriores não tenham sido executadas.
-- O diário distingue a actividade relatada de uma entrega confirmada e não atribui uma data inventada.
-- Não há resultados, percentagens de progresso, contagens de observações ou métricas fictícias.
-- A imagem de Luanda e a curva são conceptuais, não derivadas de dados.
+As ausências de concentrações foram preservadas sem imputação. A disponibilidade de uma hora para ambas as fontes é uma hipótese retrospectiva, sem comprovação de latência operacional. Não há resultados preditivos publicados.
 
-Para completar a informação, faltam:
+### Documentos efectivamente consultados
 
-1. Relatórios e datas reais das entregas, com actividades, decisões, dificuldades e próximos passos.
-2. Evidências e estado de cada etapa: **Concluída**, **Em desenvolvimento** ou **Planeada**.
-3. Período de aquisição, coordenadas do estudo, frequência, fuso horário, unidades e produtos meteorológicos utilizados.
-4. Auditoria: lacunas, duplicados, cobertura e regras efectivas de integração e limpeza.
-5. Definição final de atributos, alvos, janelas e partições cronológicas.
-6. Resultados experimentais, quando existirem, incluindo protocolo e evidências reprodutíveis.
-7. Relatórios, apresentações e capturas reais do protótipo, com descrições acessíveis.
-8. Contactos e ligações pessoais, apenas se o autor quiser fornecê-los.
-9. Referências científicas adicionais efectivamente utilizadas no trabalho.
+Encontrados na pasta `docs` da aplicação separada `previsao-pm25-luanda`, em Unipampa / AL5132:
 
-As fontes públicas verificadas para o conteúdo introdutório são EPA (definição de partículas finas) e documentação oficial da OpenWeather (APIs de poluição e meteorologia). Estão ligadas no site. O site explicita a natureza estimada dos dados e a limitação da representatividade local.
+- `implementacao_etapa3_incremento7.md`, de 28/10/2026: exportação PDF, testes controlados e dependência da validação meteorológica nessa data.
+- `diagnostico_final_fontes_meteorologicas.md`, de 29/10/2026: diagnóstico de leitura, erros de mapeamento, unidades e semântica da pressão; não executou integração histórica.
+
+Ambos contêm caminhos pessoais, hashes, identificadores e referências a artefactos locais. Foram consultados, mas não copiados para os downloads públicos. Os seus estados históricos são apresentados com a data correspondente, sem os confundir com o marco posterior de consolidação informado pelo autor.
+
+### Pendências
+
+- `Relatorio_Semanal_Etapa3_Pipeline_Atualizado(1).docx` não foi encontrado no repositório, anexos, Unipampa, Downloads ou Documents. Não foi consultado nem copiado. Os resultados de consolidação foram transcritos do pedido, sem alegar validação independente do Word.
+- Quando disponibilizado, verificar o conteúdo e eventuais dados sensíveis; copiar o Word **sem alterações** para `materiais/relatorio-consolidacao-etapa3.docx` e só então criar ligações no marco e na secção de materiais. Se houver conteúdo sensível, resolver a disponibilização antes de o tornar público, sem alterar silenciosamente o original.
+- A data exacta do marco de consolidação não foi indicada. Manter o marco separado das entregas datadas; não usar data de upload nem de edição do site.
+- O pré-preenchimento de configuração de demonstração consta apenas como proposta. Não foi verificado no código/testes da aplicação e não é anunciado como implementado.
+- A disponibilização pública de outros materiais exige revisão de dados pessoais e referências locais. Não existem links de download para documentos ausentes.
+- Contactos pessoais, novas referências científicas e resultados preditivos só serão incluídos quando fornecidos.
+
+As fontes públicas EPA e OpenWeather permanecem as da versão anterior; não foi feita nova consulta web nesta revisão.
 
 ## Editar conteúdos e acrescentar entregas
 
-Editar os textos directamente no HTML. Alterar os estados de forma individual apenas com suporte documental; evitar substituições globais. A área `REGISTOS DE EVOLUÇÃO` em `index.html` contém o diário. Inserir cada entrega **antes das anteriores**, dentro de `.timeline`, usando o modelo abaixo. Substituir todos os campos e incluir apenas ficheiros existentes. Remover o registo informativo sem data quando houver uma entrega documentada que o substitua.
+Editar os textos directamente no HTML. Alterar os estados de forma individual apenas com suporte documental; evitar substituições globais. A área `REGISTOS DATADOS` em `index.html` contém as entregas. Inserir cada entrega **antes das anteriores**, dentro de `.dated-entries`, usando o modelo abaixo. Preservar o marco sem data na área `.milestone`, separada. Substituir todos os campos e incluir apenas ficheiros existentes.
 
 ```html
 <details>
@@ -101,8 +103,43 @@ Não é necessário build ou workflow próprio. O `index.html` já está na raiz
 
 ## Verificação
 
-Verificações locais realizadas: sintaxe JavaScript; estrutura HTML, IDs únicos, correspondência de âncoras e existência de recursos locais; orçamento de transferência estática. Resultados medidos em `VERIFICACAO.md`.
+Os resultados efectivamente medidos nesta revisão estão em `VERIFICACAO.md`. Os testes do site não representam uma repetição dos testes científicos da aplicação nem das verificações do relatório.
 
-Playwright, Puppeteer e Lighthouse não estavam disponíveis no ambiente. Não se atribuem pontuações Lighthouse nem se afirma validação visual em navegador. Antes da publicação, verificar em navegador a 360, 768 e 1440 px: ausência de scroll horizontal, menu móvel, navegação por teclado, foco, Escape, âncoras e abertura de cada entrega. Confirmar também o conteúdo com JavaScript desactivado e movimento reduzido.
+Para repetir a revisão manual: servir localmente, verificar a 360, 768 e 1440 px, navegar com Tab/Enter/Escape, abrir as entregas e repetir sem JavaScript. Para Lighthouse, usar Chrome DevTools → Lighthouse; procurar ≥95 em cada categoria e registar apenas valores medidos.
 
-Para medir Lighthouse, abrir o site num servidor local, usar Chrome DevTools → Lighthouse e executar auditorias mobile e desktop. Procurar ≥95 em desempenho, acessibilidade, boas práticas e SEO; registar apenas os valores obtidos. Links externos foram consultados para fundamentação; a disponibilidade futura depende dos respectivos fornecedores.
+Nenhum commit, push ou publicação foi executado nesta tarefa. A pasta `.git` foi preservada.
+
+## Harmonização visual com a aplicação — 10/11/2026
+
+A aplicação foi aberta em `http://127.0.0.1:5173/` e comparada visualmente. Foram consultados, apenas em leitura, `frontend/src/style.css`, `frontend/src/multivariate.css` e `frontend/src/App.vue` na aplicação separada. As variáveis e os estilos calculados confirmaram:
+
+| Função | Valor da aplicação usado no site |
+|---|---|
+| Destaque / foco | `#f96501` |
+| Destaque forte / botão principal | `#b84b00` |
+| Fundo de destaque | `#fff3e8` |
+| Texto principal | `#171717` |
+| Texto de corpo / secundário | `#525252` / `#737373` |
+| Fundo / superfície | `#fafafa` / `#ffffff` |
+| Borda / borda forte | `#e5e5e5` / `#d4d4d4` |
+| Borda de destaque | `#f2c9aa` |
+
+A pilha tipográfica é a mesma: `Inter, ui-sans-serif, system-ui, -apple-system, sans-serif`. Inter é utilizada apenas se estiver disponível localmente; nenhuma fonte é descarregada. Foram harmonizados títulos, botões (raio 5 px), painéis (9 px), badges, tabelas, foco e ilustração, incluindo favicon e imagens sociais. Os estados continuam identificados por texto; os planeados têm tons neutros e os concluídos usam o destaque suave, como os estados preparados da aplicação.
+
+A estrutura académica e o conteúdo científico foram preservados. Nenhum código ou dado da aplicação foi alterado. Não foram acrescentadas bibliotecas nem publicado o site.
+
+## Experiência de leitura e transparência — revisão de 10/11/2026
+
+A página inicial explicita tema, origem dos dados, autor, instituição, actividade actual e próxima actividade. A navegação usa Início, Contexto, Problema, Solução, Etapas, Evolução e Materiais, preservando os IDs existentes para compatibilidade com ligações anteriores.
+
+A secção «Como o projecto funciona» mantém as oito etapas, agora com resumo visível e detalhes nativos para entradas, operação, saídas e verificação. Ao editar, distinguir operações concluídas de critérios previstos e manter o estado textual de cada etapa. Os detalhes não executam processamento: descrevem o que a aplicação faz e o que está planeado.
+
+Ligações permanentes incluem `#etapa-aquisicao`, `#etapa-auditoria`, `#etapa-integracao`, `#etapa-serie`, `#etapa-persistencia`, `#etapa-treino`, `#etapa-avaliacao`, `#etapa-relato`, `#marco-consolidacao`, `#entrega-2026-10-29`, `#entrega-2026-10-28` e `#criterios-exclusao`. Novas entregas devem receber IDs únicos e uma ligação no índice do diário. Acrescentar também as etapas relacionadas.
+
+`assets/main.js` indica a secção actual com `aria-current="location"`, ajusta a margem das âncoras à altura real do cabeçalho e abre detalhes quando o visitante usa uma ligação directa. Sem JavaScript, o cabeçalho deixa de ser fixo para não esconder destinos; navegação e detalhes continuam nativos.
+
+Os indicadores têm unidade, universo e interpretação. A fonte comum aparece junto dos três indicadores e a tabela tem descrição associada por `aria-describedby`. Ao adicionar resultados, indicar sempre fonte e suporte, separar preparação de previsão e não repartir exclusões por motivos sem contagens documentadas. As explicações incluem ausência versus zero, grade versus valores preenchidos e atributos derivados versus variáveis ambientais.
+
+A imagem `assets/aplicacao-preparacao.webp` é uma captura real da aplicação aberta em 10/11/2026, recortada e redimensionada para 1200 × 500, sem simular funcionalidades. Mostra apenas a interface inicial, sem dados carregados ou resultados. Foi revista visualmente: a região publicada não contém caminhos pessoais ou dados de utilizadores. Está fora da área inicial, com dimensões, texto alternativo e carregamento diferido.
+
+A identidade foi novamente conferida no navegador e no CSS da aplicação; os valores laranja/preto/cinza foram preservados. Não foram alterados código ou dados da aplicação. Não houve testes com utilizadores: a avaliação desta revisão é técnica e visual. Continuam pendentes o Word de consolidação para consulta/download e uma auditoria Lighthouse, não disponível nas ferramentas consultadas.
