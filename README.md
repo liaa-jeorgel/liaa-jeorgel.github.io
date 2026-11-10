@@ -16,6 +16,10 @@ python3 -m http.server 8000
 
 Abrir http://localhost:8000. Encerrar com Ctrl+C. Também é possível abrir `index.html` directamente, embora um servidor local reproduza melhor o ambiente de publicação.
 
+## Modo escuro
+
+O site segue automaticamente o tema claro ou escuro do sistema através de `prefers-color-scheme`. Não existe botão de tema nem preferência guardada: a página acompanha a alteração do sistema sem JavaScript. A impressão força sempre o tema claro. As cores estão centralizadas em `:root` e no bloco `@media (prefers-color-scheme: dark)` de `assets/style.css`; a ilustração SVG usa classes próprias para receber a variante escura.
+
 ## Organização
 
 - `index.html`: conteúdo científico, navegação, metodologia e diário.

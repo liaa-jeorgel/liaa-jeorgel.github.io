@@ -83,3 +83,12 @@ Capturas locais foram geradas nas três larguras. Inspeccionei a captura integra
 ### Limites
 
 Lighthouse e leitor de ecrã não executados. Sem testes com utilizadores; as conclusões são de inspecção técnica e visual. Os resultados científicos foram preservados a partir das fontes já descritas, sem nova auditoria de dados. Word de consolidação continua pendente. Nenhuma alteração na aplicação, commit, push ou publicação.
+
+## Modo escuro automático — 10/11/2026
+
+- Implementado com `prefers-color-scheme` em `assets/style.css`, sem botão, JavaScript ou armazenamento de preferência. `color-scheme` e `theme-color` acompanham o tema do sistema.
+- Testes com Chromium/Playwright a 360, 768 e 1440 px, em esquema claro e escuro: fundo do `body` `#fff`/`#101010`, texto `#525252`/`#c6c6c6`, sem deslocamento horizontal e sem erros de página.
+- Auditoria por estilos calculados no tema escuro: 468 nós de texto, nenhum abaixo de 4,5:1 (3:1 para texto grande); nenhum bloco de fundo claro com área superior a 5.000 px².
+- Impressão em sistema escuro: fundo branco e texto escuro confirmados.
+- A ilustração SVG recebeu classes para adaptar gradiente, grelha, edifícios, colina, partículas, sinal, horizontes e rótulo.
+- Não foram alterados conteúdo científico, estrutura, dependências ou comportamento sem JavaScript. Sem commit, push ou publicação.
