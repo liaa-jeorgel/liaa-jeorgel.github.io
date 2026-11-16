@@ -147,3 +147,61 @@ Os indicadores têm unidade, universo e interpretação. A fonte comum aparece j
 A imagem `assets/aplicacao-preparacao.webp` é uma captura real da aplicação aberta em 10/11/2026, recortada e redimensionada para 1200 × 500, sem simular funcionalidades. Mostra apenas a interface inicial, sem dados carregados ou resultados. Foi revista visualmente: a região publicada não contém caminhos pessoais ou dados de utilizadores. Está fora da área inicial, com dimensões, texto alternativo e carregamento diferido.
 
 A identidade foi novamente conferida no navegador e no CSS da aplicação; os valores laranja/preto/cinza foram preservados. Não foram alterados código ou dados da aplicação. Não houve testes com utilizadores: a avaliação desta revisão é técnica e visual. Continuam pendentes o Word de consolidação para consulta/download e uma auditoria Lighthouse, não disponível nas ferramentas consultadas.
+
+## Navegação lateral — 16/11/2026
+
+No computador, as secções aparecem como opções na lateral esquerda; ao seleccionar uma, o conteúdo correspondente é apresentado à direita. No telemóvel, o botão Menu abre as mesmas opções. Autor/referências e projectos relacionados também têm destinos próprios.
+
+O JavaScript usa o atributo `hidden` para alternar as nove secções, preservando as âncoras, ligações entre etapas e entregas e o histórico do navegador. Sem JavaScript, todas as secções permanecem visíveis. Ao imprimir, todas voltam a ser apresentadas. Para adicionar uma secção, criar um `section` directamente em `#principal`, com ID único, e a respectiva ligação no menu.
+
+## Redesenho editorial e tecnológico — 16/11/2026
+
+A identidade passou a um caderno de investigação: barra lateral escura numerada, conteúdo à direita, títulos editoriais em Georgia (fonte local), metadados em fonte monoespaçada do sistema e destaque laranja preservado. Os modos claro e escuro seguem a preferência do dispositivo. O CSS foi reorganizado num único ficheiro, sem carregar fontes, frameworks ou bibliotecas.
+
+Referências de design consultadas, sem ranking ou alegação de vínculo institucional:
+
+- Stanford HAI — https://hai.stanford.edu/research — página consultada por web e navegador, com captura visual inspeccionada.
+- MIT Media Lab — https://www.media.mit.edu/research/ — conteúdo e organização de pesquisa consultados pela ferramenta web; o navegador excedeu o tempo de navegação.
+- MIT Senseable City Lab — https://senseable.mit.edu/ — referência de investigação urbana consultada na pesquisa; a página não forneceu texto legível à ferramenta web e a captura no navegador excedeu o tempo de espera por fontes. Não se afirma inspecção visual completa ou reprodução das suas animações.
+
+Estas referências orientaram a decisão de dar mais destaque à pergunta de investigação, aos capítulos e ao percurso dos dados. Não foram copiadas imagens, marcas, código ou conteúdo científico dessas instituições.
+
+### Animações e interacções
+
+- Entradas suaves e escalonadas dos elementos de cada capítulo, com Web Animations API.
+- Revelação discreta das etapas ao entrarem no ecrã, sem ocultar o conteúdo base.
+- Diagrama SVG original: fontes convergentes, órbitas e fluxo conceptual para os horizontes.
+- Selector de 1/3/6 horas com texto explicativo acessível e `aria-pressed`. É uma exploração conceptual; não calcula previsões.
+- Transições nos links, cartões, botões e detalhes expansíveis.
+- Botão global de pausa na lateral e checkbox nativa para pausar o diagrama. Movimento reduzido desactiva animações e transições.
+- Ligações de capítulo anterior/seguinte, identificação do capítulo actual e histórico preservado.
+
+O texto científico e as contagens confirmadas foram mantidos. O título do SVG e a legenda explicitam os limites da ilustração. As animações não geram valores ou percentagens de progresso científico. Sem JavaScript, todas as secções e os detalhes continuam acessíveis; os controlos do explorador que dependem de JavaScript ficam ocultos. Não houve publicação.
+
+## Navegação superior — 16/11/2026
+
+A pedido do autor, a barra lateral e a apresentação como dashboard foram removidas. O menu fica no topo e as nove secções são novamente apresentadas numa página contínua. O menu compacto aplica-se até 1000 px; âncoras usam a altura real do cabeçalho. Mantêm-se as animações, o explorador conceptual e os modos claro/escuro. Esta organização substitui a navegação lateral descrita nas revisões anteriores.
+
+## Barra de progresso de leitura
+
+Indicador fixo de 3 px imediatamente abaixo do menu, posicionado pela altura real do cabeçalho (`--header-offset`), independente do layout e sem interceptar cliques, na cor `--accent`. Calcula a razão entre `scrollTop` e `scrollHeight - clientHeight`, limitada a 0–100%; oculta-se quando não há área para scroll. Não representa progresso científico do projecto.
+
+O JavaScript agrupa actualizações em `requestAnimationFrame`, usa escuta de scroll passiva e recalcula em resize, carregamento de imagens, alterações de conteúdo e de dimensão. O `MutationObserver` ignora alterações da própria barra. Há uma transição de 100 ms, desactivada com movimento reduzido. Sem JavaScript ou na impressão, a barra permanece oculta. O elemento tem nome acessível e valor percentual, sem anúncios a cada scroll.
+
+## Comparação de projectos em foco
+
+Os cartões de projectos relacionados foram removidos. A secção tem um índice tipográfico com cinco botões e uma área única que compara o projecto seleccionado com PM2.5 em Luanda. Rato (hover), foco, clique e toque activam a selecção; setas percorrem as opções, Home/Escape regressam à referência e End selecciona o último projecto. Os botões usam `aria-pressed` e a selecção tem anúncio discreto acessível.
+
+A fonte dos dados continua a ser a tabela integral no HTML, dentro de «Consultar comparação completa». O JavaScript deriva o comparador dessa tabela, sem duplicar os conteúdos científicos em estruturas de dados independentes. Sem JavaScript, a tabela integral aparece aberta. Preservaram-se os IDs antigos dos projectos nas linhas da tabela, as ligações ao portal e as ressalvas de autoria. Para editar uma comparação, actualizar a linha correspondente e, se necessário, os rótulos curtos no JavaScript.
+
+## Mapa comparativo dos projectos
+
+A secção apresenta agora uma matriz de leitura rápida: cinco projectos nas colunas e quatro dimensões nas linhas (dados, objectivo, ponto comum e diferença central). A selecção realça uma coluna sem esconder a visão de conjunto. Hover, foco, clique, toque e teclas de direcção funcionam; Home/Escape regressam ao meu projecto e End selecciona o último.
+
+No telemóvel, apenas o mapa se desloca na horizontal, mantendo a coluna das dimensões fixa. Abaixo, o projecto em foco mostra o título completo, autoria e ressalvas, com ligação à fonte. A tabela integral continua numa área expansível e aparece aberta sem JavaScript. Os botões do mapa ficam desactivados sem JavaScript; os conteúdos estáticos continuam legíveis.
+
+Para editar, actualizar as sínteses curtas no mapa e os textos detalhados na tabela integral. A autoria e os links do detalhe em foco são derivados desta última. O mapa é uma comparação metodológica; não representa relações geográficas, pontuações ou resultados experimentais.
+
+## Etapas em cartões expansíveis
+
+«Como o projecto funciona» usa oito cartões, em quatro colunas no computador, duas em larguras intermédias e uma no telemóvel. Número, título, resumo e estado permanecem visíveis. Seleccionar um cartão abre entradas, operação, saídas, verificação e fontes; seleccionar outro fecha o anterior. Os cartões usam `details/summary` nativos com o mesmo atributo `name`, mais compatibilidade JavaScript para exclusividade. Funcionam também sem JavaScript. Os IDs das etapas foram preservados e as ligações directas abrem o cartão correspondente.
