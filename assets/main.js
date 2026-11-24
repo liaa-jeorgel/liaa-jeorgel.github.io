@@ -2,7 +2,7 @@
 const toggle = document.querySelector('.menu-toggle');
 const menu = document.querySelector('#menu');
 const header = document.querySelector('.header');
-const panels = [...document.querySelectorAll('#principal > section')];
+const panels = [...document.querySelectorAll('#principal > section')].filter(panel => !panel.hidden);
 const navLinks = [...menu.querySelectorAll('a[href^="#"]')];
 const mobile = matchMedia('(max-width: 1000px)');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -60,6 +60,7 @@ function showDestination(hash, focus = false) {
   try { id = decodeURIComponent(hash.replace(/^#/, '')); } catch { return; }
   const target = id ? document.getElementById(id) : panels[0];
   if (!target) return;
+  document.dispatchEvent(new CustomEvent('materials:reveal',{detail:{target}}));
   const panel = target.closest('#principal > section');
   // O link de salto para o conteúdo não altera a secção seleccionada.
   if (!panel) return;
@@ -84,7 +85,7 @@ function showDestination(hash, focus = false) {
   }
   // As secções permanecem visíveis numa página contínua.
   for (const link of navLinks) {
-    if (link.hash === `#${panel.id}`) link.setAttribute('aria-current', 'location');
+    if (link.hash === (target.closest('#video') ? '#video' : `#${panel.id}`)) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   }
   let parent = target;
@@ -184,8 +185,13 @@ function updateCurrentSection() {
   const threshold = header.getBoundingClientRect().height + 120;
   let active = panels[0];
   for (const panel of panels) if (panel.getBoundingClientRect().top <= threshold) active = panel;
+  const scrollableHeight = document.documentElement.scrollHeight-window.innerHeight;
+  if (scrollableHeight > 0 && window.scrollY >= scrollableHeight-2) active = panels[panels.length-1];
+  const videoDestination = document.querySelector('#video');
+  const videoBounds = videoDestination?.getBoundingClientRect();
+  const activeHash = active.id === 'materiais' && videoBounds && videoBounds.top <= threshold && videoBounds.bottom > threshold ? '#video' : `#${active.id}`;
   for (const link of navLinks) {
-    if (link.hash === `#${active.id}`) link.setAttribute('aria-current', 'location');
+    if (link.hash === activeHash) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   }
   if (previousSection && active !== previousSection) transitionSection(active, window.scrollY >= previousScroll);

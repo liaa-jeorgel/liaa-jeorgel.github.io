@@ -51,8 +51,8 @@ def voiced_span(path):
     if not intervals:
         return 0.0, full
     first, last = intervals[0], intervals[-1]
-    voice_start = 0.0 if first[0] > 0.08 else last[1]
-    voice_end = full if last[1] < full - 0.08 else first[0]
+    voice_start = first[1] if first[0] <= 0.08 else 0.0
+    voice_end = last[0] if last[1] >= full - 0.08 else full
     return voice_start, max(0.4, voice_end - voice_start)
 
 

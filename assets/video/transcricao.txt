@@ -1,29 +1,32 @@
-PM2.5 em Luanda — vídeo educativo
+PM2.5 em Luanda — explicação visual
 Narração sintética portuguesa; não imita o autor.
 
-O ar que nem sempre vemos
-Em Luanda, o ar faz parte da vida de todos os dias. Trânsito, poeira e condições atmosféricas são motivos para observar a qualidade do ar. A pergunta de Jeorgel Chitende é: podemos antecipar o material particulado fino com uma, três ou seis horas de antecedência?
+O que estamos a tentar antecipar?
+Em Luanda, o projecto estuda o PM dois ponto cinco: partículas finas com até dois vírgula cinco micrómetros. A pergunta é simples: usando o passado, conseguimos antecipar a concentração uma, três ou seis horas depois?
 
-Contexto global, com cautela
-A base global da OMS reúne medições de PM 2,5 comunicadas por muitos países. Angola não tem registos nessa base; Luanda não recebe aqui um valor oficial da OMS. O mapa do site liga cidades de forma esquemática: não é um ranking nem uma comparação entre países.
+O contexto não é uma comparação
+O mapa do site situa Luanda num contexto global. As linhas são ilustrativas, não mostram movimentos do ar. Nesta base da OMS não há um valor para Luanda. O estudo usa ficheiros atribuídos à OpenWeather, não medições locais certificadas.
 
-Dois históricos, um percurso
-O estudo reúne duas fontes atribuídas à OpenWeather: concentrações de PM 2,5 e dados meteorológicos. A meteorologia inclui temperatura, humidade, pressão ao nível do mar, velocidade e direcção do vento. A conferência dos ficheiros verifica valores e transformações; não autentica a origem física nem substitui sensores locais.
+Duas fontes, a mesma hora
+Uma fonte traz a concentração de PM dois ponto cinco. A outra traz temperatura, humidade, pressão e vento. A integração compara timestamps exactos em UTC. Estar na mesma hora não prova que uma variável cause a outra.
 
-49.896 observações preservadas
-Este é o histórico real fornecido para o site, mostrado por médias diárias. A cobertura observacional é de noventa e oito vírgula zero dois por cento. As médias diárias facilitam a leitura, mas podem atenuar picos horários. Não houve suavização nem interpolação.
+Veja a série, não apenas os números
+A curva mostra as médias diárias das concentrações disponíveis. Há quarenta e nove mil oitocentas e noventa e seis observações horárias. A cobertura é de noventa e oito vírgula zero dois por cento. A média diária pode atenuar picos; não houve interpolação.
 
-Ausência não é zero
-Há mil e oito horas ausentes, distribuídas por trinta episódios. A maior ausência dura cento e vinte horas. Entre as observações que a delimitam decorrem cento e vinte e uma horas. A preparação conserva essas posições sem inventar concentrações.
+Uma lacuna não vale zero
+As mil e oito horas ausentes aparecem como ausências. Criar a posição da hora não cria uma concentração. A maior lacuna tem cento e vinte horas sem observação: são cento e vinte e uma horas entre os registos que a delimitam.
 
-Preparação transparente
-A aplicação organiza o percurso: importar, diagnosticar, alinhar as horas e construir os atributos. No site, as explicações completas continuam disponíveis numa página de método.
+O que a preparação transforma?
+Primeiro, conferir timestamps, unidades e duplicações. Depois, alinhar as fontes numa grade horária. Os valores de concentração são preservados. A ilustração explica o processo; não é uma gravação da aplicação em execução.
 
-Uma origem, três alvos
-Para cada instante de origem, as entradas usam apenas observações anteriores. O alvo é a concentração observada exactamente uma, três ou seis horas depois. Neste exemplo real, as três marcações são alvos históricos, não resultados de um modelo.
+As entradas olham apenas para trás
+No instante t, os atributos usam apenas o passado: por exemplo, valores de uma, três, seis ou vinte e quatro horas antes. As médias móveis também terminam antes de t. A hipótese retrospectiva de disponibilidade de uma hora não é uma latência operacional comprovada.
 
-39 atributos por horizonte
-Os ficheiros contêm trinta e nove atributos por horizonte, com desfasamentos e médias do passado. A conferência independente comparou alvos, atributos e elegibilidade com os dados fornecidos, sem divergências nessas verificações.
+Depois de t estão os alvos
+Neste exemplo, a origem é o meio dia de dois de dezembro de dois mil e vinte. As marcações mostram uma, três e seis horas depois. Esses pontos são concentrações históricas observadas, usadas como alvos. Não são previsões produzidas por um modelo.
 
-O que falta responder?
-Preparar os dados ainda não responde à pergunta da previsão. A próxima fase é executar a persistência, que repete a última concentração disponível, e depois treinar Random Forest e LSTM. A comparação deverá respeitar a ordem temporal e usar os mesmos períodos de teste por horizonte, com erro absoluto médio e raiz do erro quadrático médio. Ainda não há resultados preditivos. Explore os dados, consulte as limitações e acompanhe a próxima etapa no site.
+Nem toda hora forma uma amostra
+Uma amostra exige histórico completo e alvo disponível. Os três ficheiros têm trinta e nove atributos, mas quantidades diferentes de amostras. As contagens não se somam. A conferência dos CSV verificou alvos e atributos; não autentica a origem física da fonte.
+
+A comparação ainda está por fazer
+A próxima etapa é usar a persistência como referência e treinar Random Forest e LSTM, com separação cronológica. Depois, comparar os erros nos mesmos períodos por horizonte. Dados preparados não são previsões: ainda não existem resultados preditivos.

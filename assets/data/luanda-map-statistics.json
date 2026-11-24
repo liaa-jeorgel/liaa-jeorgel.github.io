@@ -1,0 +1,108 @@
+{
+  "city": "Luanda",
+  "source": "OpenWeather Air Pollution API — atribuição declarada pelo autor",
+  "nature": "Histórico fornecido; origem física não autenticada; não representa medição local certificada nem resultados de treino",
+  "input_name": "pm25_luanda_preparado (3).csv",
+  "input_sha256": "c62ffa9ceba50cd9f5b22f3eed6afc1fb0b33b2a04e59866018ffead91e41e61",
+  "verified_on": "2026-11-24",
+  "unit": "µg/m³",
+  "aggregation": "Média aritmética das concentrações horárias presentes. Ausências não entram como zero. Cobertura relativamente às horas da grade no período; anos parciais identificados.",
+  "periods": {
+    "todos": {
+      "start_utc": "2020-12-01T12:00:00+00:00",
+      "end_utc": "2026-09-22T11:00:00+00:00",
+      "grid_hours": 50904,
+      "observed_hours": 49896,
+      "missing_hours": 1008,
+      "coverage_percent": 98.01980198019803,
+      "mean_ug_m3": 24.440456148789483,
+      "max_ug_m3": 568.32,
+      "min_ug_m3": 0.0,
+      "complete_calendar_year": false
+    },
+    "2020": {
+      "start_utc": "2020-12-01T12:00:00+00:00",
+      "end_utc": "2020-12-31T23:00:00+00:00",
+      "grid_hours": 732,
+      "observed_hours": 732,
+      "missing_hours": 0,
+      "coverage_percent": 100.0,
+      "mean_ug_m3": 16.915696721311473,
+      "max_ug_m3": 159.41,
+      "min_ug_m3": 3.93,
+      "complete_calendar_year": false
+    },
+    "2021": {
+      "start_utc": "2021-01-01T00:00:00+00:00",
+      "end_utc": "2021-12-31T23:00:00+00:00",
+      "grid_hours": 8760,
+      "observed_hours": 8736,
+      "missing_hours": 24,
+      "coverage_percent": 99.72602739726028,
+      "mean_ug_m3": 27.570424679487182,
+      "max_ug_m3": 408.15,
+      "min_ug_m3": 2.39,
+      "complete_calendar_year": true
+    },
+    "2022": {
+      "start_utc": "2022-01-01T00:00:00+00:00",
+      "end_utc": "2022-12-31T23:00:00+00:00",
+      "grid_hours": 8760,
+      "observed_hours": 8592,
+      "missing_hours": 168,
+      "coverage_percent": 98.08219178082192,
+      "mean_ug_m3": 30.78079143389199,
+      "max_ug_m3": 568.32,
+      "min_ug_m3": 2.55,
+      "complete_calendar_year": true
+    },
+    "2023": {
+      "start_utc": "2023-01-01T00:00:00+00:00",
+      "end_utc": "2023-12-31T23:00:00+00:00",
+      "grid_hours": 8760,
+      "observed_hours": 8640,
+      "missing_hours": 120,
+      "coverage_percent": 98.63013698630137,
+      "mean_ug_m3": 30.108718749999998,
+      "max_ug_m3": 546.46,
+      "min_ug_m3": 1.55,
+      "complete_calendar_year": true
+    },
+    "2024": {
+      "start_utc": "2024-01-01T00:00:00+00:00",
+      "end_utc": "2024-12-31T23:00:00+00:00",
+      "grid_hours": 8784,
+      "observed_hours": 8664,
+      "missing_hours": 120,
+      "coverage_percent": 98.63387978142076,
+      "mean_ug_m3": 35.2126108033241,
+      "max_ug_m3": 476.24,
+      "min_ug_m3": 1.48,
+      "complete_calendar_year": true
+    },
+    "2025": {
+      "start_utc": "2025-01-01T00:00:00+00:00",
+      "end_utc": "2025-12-31T23:00:00+00:00",
+      "grid_hours": 8760,
+      "observed_hours": 8520,
+      "missing_hours": 240,
+      "coverage_percent": 97.26027397260275,
+      "mean_ug_m3": 11.448181924882629,
+      "max_ug_m3": 273.9,
+      "min_ug_m3": 0.0,
+      "complete_calendar_year": true
+    },
+    "2026": {
+      "start_utc": "2026-01-01T00:00:00+00:00",
+      "end_utc": "2026-09-22T11:00:00+00:00",
+      "grid_hours": 6348,
+      "observed_hours": 6012,
+      "missing_hours": 336,
+      "coverage_percent": 94.7069943289225,
+      "mean_ug_m3": 6.489524284763805,
+      "max_ug_m3": 22.5,
+      "min_ug_m3": 0.0,
+      "complete_calendar_year": false
+    }
+  }
+}

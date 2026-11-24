@@ -1,439 +1,155 @@
-"""Renderiza o vídeo educativo a partir do roteiro e da narração locais.
+"""Vídeo explicativo com animações dos derivados locais e narração sintética.
 
-Sem dados remotos: o gráfico e o exemplo horário vêm dos derivados em
-`assets/data/`. As transições são curtas e o movimento é muito ligeiro.
+Requer Pillow e imageio-ffmpeg; executar make_narration.py antes.
+Nenhuma animação simula uma execução ou produz previsões.
 """
-import csv, datetime as dt, json, math, re, subprocess, textwrap
+import csv,datetime as dt,json,math,re,subprocess,textwrap
 from pathlib import Path
-
+from functools import lru_cache
+from PIL import Image,ImageDraw,ImageFont
 import imageio_ffmpeg
-from PIL import Image, ImageDraw, ImageFont
+ROOT=Path.cwd();WORK=Path('/tmp/pm25-video');OUT=ROOT/'assets/video';OUT.mkdir(exist_ok=True)
+meta=json.loads((WORK/'scenes.json').read_text());scenes=meta['scenes'];FF=imageio_ffmpeg.get_ffmpeg_exe()
+W,H,FPS=1280,720,24
+BG='#131c18';PANEL='#202d25';LINE='#3d5146';INK='#eef3eb';MUTED='#b1c2b7';ORANGE='#ffab67';BLUE='#9cc5d6'
+@lru_cache(None)
+def font(n,b=False):return ImageFont.truetype('/System/Library/Fonts/Supplemental/'+('Arial Bold.ttf' if b else 'Arial.ttf'),n)
+def txt(d,x,y,s,n=26,color=INK,b=False):d.text((x,y),s,font=font(n,b),fill=color)
+def card(d,box,accent=False):d.rounded_rectangle(box,radius=18,fill=PANEL,outline=ORANGE if accent else LINE,width=2)
+def clamp(x):return min(1,max(0,x))
+def step(p,a,b):return clamp((p-a)/(b-a))
+def dot(d,x,y,r=6,color=ORANGE):d.ellipse((x-r,y-r,x+r,y+r),fill=color)
+def arrow(d,x1,y1,x2,y2,color=ORANGE):
+ d.line((x1,y1,x2,y2),fill=color,width=3);angle=math.atan2(y2-y1,x2-x1);d.polygon([(x2,y2),(x2-12*math.cos(angle-.45),y2-12*math.sin(angle-.45)),(x2-12*math.cos(angle+.45),y2-12*math.sin(angle+.45))],fill=color)
+def draw_path(d,pts,color=ORANGE,width=3):
+ if len(pts)>1:d.line(pts,fill=color,width=width)
+ elif pts:dot(d,*pts[0],r=2,color=color)
+daily=list(csv.DictReader((ROOT/'assets/data/serie-diaria.csv').open()));hourly=list(csv.DictReader((ROOT/'assets/data/exemplo-horario.csv').open()));gaps=json.loads((ROOT/'assets/data/lacunas.json').read_text());audit=json.loads((ROOT/'assets/data/audit.json').read_text())
+origin=dt.datetime(2020,12,2,12,tzinfo=dt.timezone.utc);obs={dt.datetime.fromisoformat(r['timestamp_utc']):float(r['pm2_5']) for r in hourly};largest=max(gaps,key=lambda g:g['hours'])
 
-ROOT = Path.cwd()
-WORK = Path('/tmp/pm25-video')
-OUT = ROOT / 'assets/video'
-ff = imageio_ffmpeg.get_ffmpeg_exe()
-meta = json.loads((WORK / 'scenes.json').read_text(encoding='utf-8'))
-scenes = meta['scenes']
-W, H, FPS = 1280, 720, 24
-XFADE = 0.65
-FONT_DIR = Path('/System/Library/Fonts/Supplemental/')
+def frame(scene,index,p):
+ im=Image.new('RGB',(W,H),BG);d=ImageDraw.Draw(im)
+ d.rectangle((0,0,W,5),fill=ORANGE);txt(d,55,29,'PM2.5 / LUANDA',20,ORANGE,True);txt(d,854,31,'JEORGEL CHITENDE · UNIPAMPA',16,MUTED)
+ txt(d,55,77,scene['kicker'],17,ORANGE,True);title_size=42
+ while d.textlength(scene['title'],font=font(title_size,True))>1170:title_size-=1
+ txt(d,55,113,scene['title'],title_size,INK,True)
+ k=scene['kind']
+ if k=='city':
+  for j,(x,h,w) in enumerate([(75,100,85),(175,160,90),(280,125,80),(375,210,80),(470,145,85),(570,110,80)]):
+   d.rectangle((x,465-h,x+w,465),fill=PANEL,outline=LINE,width=2)
+   for xx in range(x+15,x+w-10,23):
+    for yy in range(465-h+20,445,28):d.rectangle((xx,yy,xx+6,yy+8),fill='#60786b')
+  for j in range(18):
+   x=90+(j*83+math.sin(p*8+j)*12)%560;y=216+(j*47)%130+math.cos(p*9+j)*7;dot(d,x,y,2+j%3)
+  d.line((55,470,670,470),fill=LINE,width=3)
+  x=70+(p*450)%520;d.rounded_rectangle((x,475,x+53,492),radius=5,fill='#405b4d');dot(d,x+10,495,4,MUTED);dot(d,x+43,495,4,MUTED)
+  card(d,(730,212,1220,502));txt(d,760,240,'PARTÍCULAS FINAS',22,MUTED,True);txt(d,760,285,'≤ 2,5 µm',64,ORANGE,True);txt(d,760,390,'1 h · 3 h · 6 h',38,INK,True);txt(d,55,529,'Luanda esquemática · fontes dos episódios não identificadas',21,MUTED)
+ elif k=='world':
+  cx,cy,rx,ry=620,355,300,150;d.ellipse((cx-rx,cy-ry,cx+rx,cy+ry),outline=LINE,width=2)
+  for f in [.4,.75]:d.ellipse((cx-rx*f,cy-ry,cx+rx*f,cy+ry),outline=LINE,width=1)
+  for yy in [cy-60,cy,cy+60]:d.line((cx-rx+40,yy,cx+rx-40,yy),fill=LINE,width=1)
+  pts=[(390,310),(585,270),(650,397),(810,300),(840,445)]
+  for i in range(4):
+   a,b=pts[i],pts[i+1];t=step(p,.04+i*.08,.35+i*.08);d.line((a[0],a[1],a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t),fill=ORANGE,width=2)
+  for a in pts:dot(d,*a,6)
+  d.ellipse((633,380,667,414),outline=ORANGE,width=2);txt(d,677,386,'Luanda',24,ORANGE,True)
+  txt(d,55,525,'Pontos e ligações esquemáticos · sem valor para Luanda na OMS V8.0',21,MUTED)
+ elif k=='sources':
+  for x,title,items in [(55,'PM2.5',['Concentração','µg/m³']),(755,'METEOROLOGIA',['Temperatura · humidade · pressão','Velocidade e direcção do vento'])]:
+   card(d,(x,218,x+470,463));txt(d,x+25,244,title,33,ORANGE,True)
+   for j,line in enumerate(items):txt(d,x+25,320+j*48,line,22)
+  arrow(d,545,345,735,345,BLUE);cx=545+190*((p*2)%1);dot(d,cx,345,7,BLUE);txt(d,555,285,'UTC',32,BLUE,True)
+  txt(d,55,515,'Mesma hora ≠ causa comprovada',30,INK,True)
+ elif k=='series':
+  x0,x1,y0,y1=85,1195,230,473;hi=200
+  for v in [0,50,100,150,200]:yy=y1-v/hi*(y1-y0);d.line((x0,yy,x1,yy),fill=LINE);txt(d,33,yy-10,str(v),17,MUTED)
+  txt(d,85,197,'Médias diárias · µg/m³',19,MUTED)
+  n=max(1,int(len(daily)*step(p,.04,.68)));pts=[]
+  for j,r in enumerate(daily[:n]):
+   if not r['pm25_mean_ug_m3']:draw_path(d,pts);pts=[]
+   else:pts.append((x0+j/(len(daily)-1)*(x1-x0),y1-float(r['pm25_mean_ug_m3'])/hi*(y1-y0)))
+  draw_path(d,pts);txt(d,85,482,'12/2020',18,MUTED);txt(d,1100,482,'09/2026',18,MUTED)
+  txt(d,85,523,'49.896 observações',30,ORANGE,True);txt(d,675,523,'98,02% cobertura',30,ORANGE,True)
+ elif k=='gaps':
+  d.line((80,324,1200,324),fill=LINE,width=3)
+  # O número de blocos é simbólico; as datas e a duração vêm da lacuna real.
+  for j in range(12):
+   xx=95+j*96;missing=2<=j<=9;visible=j<=int(step(p,.03,.5)*12)
+   if visible:
+    d.rounded_rectangle((xx,287,xx+57,361),radius=8,fill=BG if missing else PANEL,outline=BLUE if missing else ORANGE,width=2)
+    txt(d,xx+10,306,'—' if missing else '●',27,BLUE if missing else ORANGE)
+  txt(d,90,215,'Observado',21,ORANGE,True);txt(d,470,215,'Sem observação',23,BLUE,True);txt(d,1050,215,'Observado',21,ORANGE,True)
+  txt(d,105,400,'120 horas ausentes',42,BLUE,True);txt(d,710,413,'121 h entre registos',29,INK,True)
+  start=dt.datetime.fromisoformat(largest['start_utc']);end=dt.datetime.fromisoformat(largest['end_utc']);txt(d,90,492,f'Lacuna real: {start:%d/%m/%Y %Hh}–{end:%d/%m/%Y %Hh} UTC',23,MUTED)
+  txt(d,90,535,'Blocos ilustrativos, sem escala horária · ausência ≠ zero',21,MUTED)
+ elif k=='pipeline':
+  steps=['Conferir','Alinhar','Preservar','Exportar'];labels=['Datas e unidades','Grade horária','Valores e lacunas','Ficheiros verificáveis'];active=min(3,int(p*4))
+  for j,(name,label) in enumerate(zip(steps,labels)):
+   x=55+j*304;card(d,(x,255,x+265,455),j==active);txt(d,x+20,282,f'0{j+1}',20,ORANGE,True);txt(d,x+20,327,name,31,INK,True);txt(d,x+20,388,label,18,MUTED)
+   if j<3:arrow(d,x+272,355,x+294,355,ORANGE if j<active else LINE)
+  txt(d,55,512,'Animação do método · não é execução da aplicação',26,MUTED)
+ elif k=='features':
+  card(d,(55,214,1225,504));txt(d,78,225,'PM2.5 · µg/m³',17,MUTED);ty=311;d.line((110,ty,1160,ty),fill=LINE,width=3)
+  for j,h in enumerate([24,6,3,1]):
+   x=140+j*225;active=j<=int(step(p,.02,.55)*4);dot(d,x,ty,8,ORANGE if active else LINE);txt(d,x-22,260,f't−{h} h',23,ORANGE if active else MUTED,True)
+   value=f'{obs[origin-dt.timedelta(hours=h)]:.2f}'.replace('.',',');txt(d,x-24,345,value,30,INK,True)
+  d.line((1100,242,1100,415),fill=BLUE,width=3);txt(d,1090,266,'t',30,BLUE,True)
+  if p>.45:
+   dot(d,702,ty,8);txt(d,678,260,'t−2 h',23,ORANGE,True);txt(d,678,345,f'{obs[origin-dt.timedelta(hours=2)]:.2f}'.replace('.',','),30,INK,True)
+   d.line((568,408,845,408),fill=ORANGE,width=3)
+   mean=sum(obs[origin-dt.timedelta(hours=j)] for j in [1,2,3])/3
+   txt(d,500,435,('Média(t−3, t−2, t−1) = '+f'{mean:.2f}'+' µg/m³').replace('.',','),22,ORANGE)
+  txt(d,78,486,'Posições esquemáticas; não representam escala temporal.',17,MUTED)
+  txt(d,55,532,'Disponibilidade de 1 h: hipótese retrospectiva, não latência medida',21,MUTED)
+ elif k=='horizons':
+  start=origin-dt.timedelta(hours=24);end=origin+dt.timedelta(hours=8);x=lambda t:80+(t-start).total_seconds()/(end-start).total_seconds()*1120;y=lambda v:465-v/100*245;xo=x(origin)
+  d.rectangle((xo,212,1200,465),fill='#392a1d')
+  for v in [0,50,100]:yy=y(v);d.line((80,yy,1200,yy),fill=LINE);txt(d,30,yy-10,str(v),17,MUTED)
+  past=[(x(t),y(v)) for t,v in obs.items() if t<=origin];draw_path(d,past);d.line((xo,210,xo,475),fill=BLUE,width=2);txt(d,xo-20,484,'t · 12h',20,BLUE,True)
+  if p>.2:draw_path(d,[(x(t),y(v)) for t,v in obs.items() if t>=origin],color='#c9a280',width=2)
+  for j,h in enumerate([1,3,6]):
+   if p<.25+j*.17:continue
+   t=origin+dt.timedelta(hours=h);xx=x(t);yy=y(obs[t]);dot(d,xx,yy,7);txt(d,xx-22,230+j*34,f'+{h}h',22,ORANGE,True)
+  txt(d,80,530,'02/12/2020 · alvos observados, não previsões',24,INK,True)
+ elif k=='samples':
+  for j,(h,n) in enumerate([(1,'49.124'),(3,'49.068'),(6,'48.984')]):
+   x=55+j*405;card(d,(x,223,x+365,476),j==min(2,int(p*3)));txt(d,x+24,246,f'{h} HORA'+('S' if h>1 else ''),23,ORANGE,True);txt(d,x+24,302,n,57,INK,True);txt(d,x+24,384,'amostras mantidas',23,MUTED);txt(d,x+24,431,'39 atributos',24,ORANGE)
+  txt(d,55,524,'Histórico completo + alvo disponível · contagens não se somam',23,MUTED)
+ elif k=='future':
+  names=['Persistência','Random Forest','LSTM'];labels=['Referência simples','Árvores de decisão','Rede para sequências']
+  for j,(name,label) in enumerate(zip(names,labels)):
+   x=55+j*405;card(d,(x,224,x+365,407));txt(d,x+24,255,name,29,INK,True);txt(d,x+24,318,label,22,MUTED);txt(d,x+24,363,'POR EXECUTAR',17,ORANGE,True)
+  txt(d,65,448,'Mesmo período de teste · ordem cronológica',29,BLUE,True);txt(d,65,511,'Ainda sem resultados preditivos.',35,ORANGE,True)
+ # Área inferior livre para as legendas; sem texto de gráfico sob a fala.
+ d.line((55,568,1225,568),fill=LINE,width=1);txt(d,55,690,'Animação explicativa · dados dos CSV · narração sintética',15,MUTED)
+ txt(d,1125,690,f'{index+1:02} / {len(scenes):02}',15,MUTED);d.rectangle((0,716,int(W*p),719),fill=ORANGE)
+ return im
 
-INK = '#eef1e7'
-MUTED = '#b4bfae'
-ORANGE = '#ff934b'
-BG = '#171d19'
-PANEL = '#202a22'
-PANEL_2 = '#2a352c'
-LINE = '#3b473c'
+def stamp(t):return f'{int(t//3600):02}:{int(t%3600//60):02}:{t%60:06.3f}'
+def render():
+ chapters=[];vtt=['WEBVTT\n'];offset=0;clips=[]
+ for i,s in enumerate(scenes):
+  duration=s['duration'];count=math.ceil(duration*FPS);clip=WORK/f'animated-{i}.mp4'
+  cmd=[FF,'-y','-v','error','-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}','-r',str(FPS),'-i','pipe:0','-i',s['audio'],'-t',f'{duration:.6f}','-vf',f'fade=t=in:st=0:d=0.25,fade=t=out:st={duration-.2:.3f}:d=0.2','-c:v','libx264','-preset','fast','-crf','24','-pix_fmt','yuv420p','-c:a','aac','-b:a','96k','-ar','48000','-movflags','+faststart',str(clip)]
+  proc=subprocess.Popen(cmd,stdin=subprocess.PIPE)
+  for n in range(count):proc.stdin.write(frame(s,i,n/max(1,count-1)).tobytes())
+  proc.stdin.close();assert proc.wait()==0;clips.append(clip)
+  if i==0:frame(s,i,.42).save(OUT/'capa.jpg',quality=90)
+  for line,timing in zip(s['lines'],s['timings']):
+   # Cues até 10 palavras, ancorados na frase sintetizada. Sem sobreposição.
+   words=line.split();chunks=[words[j:j+10] for j in range(0,len(words),10)];begin=offset+timing['start']+timing['voiced_start'];length=timing['voiced_duration'];used=0
+   for chunk in chunks:
+    a=begin+length*used/len(words);used+=len(chunk);b=begin+length*used/len(words)
+    vtt.append(f'{stamp(a)} --> {stamp(b)} line:84% position:50% align:center\n'+textwrap.fill(' '.join(chunk),48)+'\n')
+  chapters.append({'scene':i+1,'start':round(offset,3),'duration':round(duration,3),'title':s['title'],'kind':s['kind']});offset+=duration
+  print(f'Cena {i+1}/{len(scenes)} · {duration:.1f}s',flush=True)
+ (WORK/'animated-clips.txt').write_text(''.join(f"file '{p}'\n" for p in clips))
+ video=WORK/'pm25-luanda-final.mp4';subprocess.run([FF,'-y','-v','error','-f','concat','-safe','0','-i',str(WORK/'animated-clips.txt'),'-c','copy','-movflags','+faststart','-metadata','title=PM2.5 em Luanda — explicação visual',str(video)],check=True);video.replace(OUT/'pm25-luanda.mp4')
+ (OUT/'pm25-luanda.vtt').write_text('\n'.join(vtt));(OUT/'transcricao.txt').write_text('PM2.5 em Luanda — explicação visual\nNarração sintética portuguesa; não imita o autor.\n\n'+'\n\n'.join(s['title']+'\n'+' '.join(s['lines']) for s in scenes)+'\n')
+ cvtt=['WEBVTT\n']
+ for i,c in enumerate(chapters):cvtt.append(f"{stamp(c['start'])} --> {stamp(chapters[i+1]['start'] if i+1<len(chapters) else offset)}\n{c['title']}\n")
+ (OUT/'capitulos.vtt').write_text('\n'.join(cvtt))
+ (OUT/'producao.json').write_text(json.dumps({'duration_seconds':round(offset,3),'voice':meta['voice'],'speech_rate_wpm':meta['rate'],'resolution':'1280x720','frame_rate':FPS,'captions':{'language':'pt','cues':sum('-->' in cue for cue in vtt),'alignment':'proporcional dentro da fala detectada de cada frase; revisão palavra-a-palavra pendente'},'scenes':chapters,'data':'assets/data/audit.json','nature':'Animação do método e dos CSV; não é gravação da aplicação, filmagem local ou resultado preditivo.'},ensure_ascii=False,indent=2));print('TOTAL',round(offset,3),flush=True)
 
-daily = list(csv.DictReader(open(ROOT / 'assets/data/serie-diaria.csv', encoding='utf-8')))
-hourly = list(csv.DictReader(open(ROOT / 'assets/data/exemplo-horario.csv', encoding='utf-8')))
-
-
-def font(size, bold=False, serif=False):
-    if serif:
-        name = 'Georgia Bold.ttf' if bold else 'Georgia.ttf'
-    else:
-        name = 'Arial Bold.ttf' if bold else 'Arial.ttf'
-    return ImageFont.truetype(str(FONT_DIR / name), size)
-
-
-def tw(d, text, f):
-    box = d.textbbox((0, 0), text, font=f)
-    return box[2] - box[0]
-
-
-def text(d, xy, value, size=24, fill=INK, bold=False, serif=False):
-    d.text(xy, value, font=font(size, bold, serif), fill=fill)
-
-
-def wrap(d, value, f, max_width):
-    words = value.split()
-    lines, current = [], ''
-    for word in words:
-        candidate = f'{current} {word}'.strip()
-        if current and tw(d, candidate, f) > max_width:
-            lines.append(current)
-            current = word
-        else:
-            current = candidate
-    if current:
-        lines.append(current)
-    return lines
-
-
-def base(d, scene, index, total):
-    d.rectangle((0, 0, W, H), fill=BG)
-    for x in range(0, W, 80):
-        d.line((x, 0, x, H), fill='#1c251e', width=1)
-    for y in range(0, H, 80):
-        d.line((0, y, W, y), fill='#1c251e', width=1)
-    d.rectangle((0, 0, W, 6), fill=ORANGE)
-    text(d, (64, 32), 'PM2.5 / LUANDA', 20, ORANGE, True)
-    text(d, (930, 34), 'JEORGEL CHITENDE · UNIPAMPA', 16, MUTED)
-    text(d, (64, 76), scene['kicker'], 17, ORANGE, True)
-    title_font = font(46, True, True)
-    title_lines = wrap(d, scene['title'], title_font, 1120)
-    for n, line in enumerate(title_lines):
-        text(d, (64, 106 + n * 54), line, 46, INK, True, True)
-    top = 106 + len(title_lines) * 54 + 26
-    d.line((64, 676, 1216, 676), fill=LINE, width=1)
-    text(d, (64, 688), 'Narração sintética · dados conferidos em 24/11/2026', 16, MUTED)
-    number = f'{index + 1} / {total}'
-    text(d, (1190 - tw(d, number, font(16)), 688), number, 16, MUTED)
-    return top
-
-
-def card(d, box, fill=PANEL, outline=LINE, radius=16):
-    d.rounded_rectangle(box, radius=radius, fill=fill, outline=outline, width=2)
-
-
-def draw_city(d, top):
-    palette = ['#253129', '#2c3a2e']
-    skyline = [(100, 100, 95), (215, 160, 80), (320, 125, 100), (445, 210, 85),
-               (550, 155, 90), (670, 110, 105), (805, 180, 85), (910, 135, 100), (1040, 85, 100)]
-    for n, (x, h, w) in enumerate(skyline):
-        d.rounded_rectangle((x, 545 - h, x + w, 545), radius=3,
-                            fill=palette[n % 2], outline='#60705e', width=2)
-        for xx in range(x + 15, x + w - 10, 22):
-            for yy in range(545 - h + 20, 525, 28):
-                d.rectangle((xx, yy, xx + 6, yy + 9), fill='#60705e')
-    for n in range(26):
-        x = 90 + (n * 103) % 1100
-        y = top + 30 + (n * 47) % 150
-        r = 2 + n % 4
-        d.ellipse((x - r, y - r, x + r, y + r), fill=ORANGE)
-    d.line((64, 546, 1216, 546), fill=ORANGE, width=3)
-    text(d, (70, 574), '1 h  ·  3 h  ·  6 h', 42, ORANGE, True)
-    text(d, (70, 632), 'Ilustração esquemática · sem atribuir causas aos dados', 18, MUTED)
-
-
-def quad_points(a, b, bend=50, steps=36):
-    x1, y1 = a
-    x2, y2 = b
-    dx, dy = x2 - x1, y2 - y1
-    dist = max(1, math.hypot(dx, dy))
-    cx = (x1 + x2) / 2 - dy / dist * bend
-    cy = (y1 + y2) / 2 + dx / dist * bend
-    out = []
-    for n in range(steps + 1):
-        t = n / steps
-        x = (1 - t) ** 2 * x1 + 2 * (1 - t) * t * cx + t ** 2 * x2
-        y = (1 - t) ** 2 * y1 + 2 * (1 - t) * t * cy + t ** 2 * y2
-        out.append((round(x), round(y)))
-    return out
-
-
-def draw_world(d, top):
-    cx, cy, rx, ry = 640, 425, 335, 205
-    d.ellipse((cx - rx, cy - ry, cx + rx, cy + ry), fill='#1b251e', outline=LINE, width=2)
-    for factor in (0.38, 0.72):
-        d.ellipse((cx - rx * factor, cy - ry, cx + rx * factor, cy + ry), outline=LINE, width=1)
-    for offset in (-0.55, -0.2, 0.2, 0.55):
-        y = cy + offset * ry
-        half = rx * math.sqrt(max(0.05, 1 - offset ** 2))
-        d.line((cx - half, y, cx + half, y), fill=LINE, width=1)
-    points = {
-        'América': (0.29, 0.40),
-        'Europa': (0.50, 0.31),
-        'África': (0.53, 0.55),
-        'Ásia': (0.73, 0.38),
-        'Oceânia': (0.86, 0.72),
-    }
-    absolute = {k: (cx + (u - 0.5) * 2 * rx, cy + (v - 0.5) * 2 * ry) for k, (u, v) in points.items()}
-    for a, b in [('América', 'Europa'), ('América', 'África'), ('Europa', 'Ásia'),
-                 ('África', 'Ásia'), ('Ásia', 'Oceânia')]:
-        d.line(quad_points(absolute[a], absolute[b]), fill=ORANGE, width=2)
-    for name, (x, y) in absolute.items():
-        r = 5 if name != 'África' else 8
-        d.ellipse((x - r, y - r, x + r, y + r), fill=ORANGE if name == 'África' else MUTED)
-    lx, ly = absolute['África']
-    d.ellipse((lx - 15, ly - 15, lx + 15, ly + 15), outline=ORANGE, width=3)
-    text(d, (lx + 20, ly - 12), 'Luanda', 20, ORANGE, True)
-    text(d, (70, top + 20), 'OMS V8.0 · sem registos para Angola', 22, INK, True)
-    text(d, (70, top + 62), 'Pontos esquemáticos · sem ranking nem comparação entre países', 19, MUTED)
-
-
-def draw_sources(d, top):
-    panels = [
-        (70, 'PM 2,5', ['Concentração horária', 'Unidade: µg/m³', 'Lacunas preservadas']),
-        (670, 'METEOROLOGIA', ['Temperatura · humidade · pressão', 'Velocidade e direcção do vento', 'Alinhamento horário em UTC']),
-    ]
-    for x, heading, items in panels:
-        card(d, (x, top + 10, x + 535, 560))
-        text(d, (x + 28, top + 38), heading, 32, ORANGE, True)
-        d.line((x + 28, top + 88, x + 507, top + 88), fill=LINE, width=1)
-        for n, item in enumerate(items):
-            text(d, (x + 28, top + 112 + n * 58), item, 24, INK)
-    text(d, (70, 600), 'Origem declarada: OpenWeather · conferência dos CSV fornecidos', 21, MUTED)
-
-
-def chart_base(d, top, hi, x0=90, x1=1190, y0=None, y1=548):
-    y0 = top + 30 if y0 is None else y0
-    for n in range(5):
-        y = y1 - n * (y1 - y0) / 4
-        d.line((x0, y, x1, y), fill=LINE, width=1)
-        label = str(round(hi * n / 4))
-        text(d, (x0 - 52, y - 10), label, 15, MUTED)
-    text(d, (x0, y0 - 34), 'PM2.5 · µg/m³', 17, MUTED)
-    return x0, x1, y0, y1
-
-
-def draw_series(d, top):
-    values = []
-    for row in daily:
-        raw = row['pm25_mean_ug_m3']
-        values.append(float(raw) if raw else None)
-    hi = math.ceil(max(v for v in values if v is not None) / 50) * 50
-    x0, x1, y0, y1 = chart_base(d, top, hi)
-    step = (x1 - x0) / max(1, len(values) - 1)
-    points = []
-    for n, value in enumerate(values):
-        x = x0 + n * step
-        if value is None:
-            if len(points) > 1:
-                d.line(points, fill=ORANGE, width=3)
-            points = []
-        else:
-            points.append((round(x), round(y1 - value / hi * (y1 - y0))))
-    if len(points) > 1:
-        d.line(points, fill=ORANGE, width=3)
-    text(d, (90, 566), '12/2020', 18, MUTED)
-    text(d, (1080, 566), '09/2026', 18, MUTED)
-    card(d, (70, 596, 560, 654), fill=PANEL_2)
-    text(d, (92, 610), '98,02% de cobertura', 28, ORANGE, True)
-    text(d, (610, 608), 'Médias diárias · sem suavização nem interpolação', 21, MUTED)
-
-
-def draw_gaps(d, top):
-    text(d, (80, top + 12), '120 h', 92, ORANGE, True)
-    text(d, (80, top + 120), 'maior ausência', 28, INK)
-    x0, x1, y = 620, 1180, top + 80
-    d.line((x0, y, x1, y), fill=LINE, width=5)
-    d.line((x0 + 170, y, x1 - 130, y), fill=ORANGE, width=7)
-    for x in (x0 + 170, x1 - 130):
-        d.ellipse((x - 9, y - 9, x + 9, y + 9), fill=ORANGE)
-    text(d, (660, top + 18), 'SEM OBSERVAÇÃO', 24, ORANGE, True)
-    text(d, (680, top + 122), '121 h entre observações', 22, MUTED)
-    card(d, (70, 540, 1210, 640), fill=PANEL_2)
-    text(d, (96, 560), '1.008 horas ausentes · 30 episódios', 32, INK, True)
-    text(d, (96, 606), 'A ausência não é zero: nenhuma concentração foi inventada.', 20, MUTED)
-
-
-def draw_pipeline(d, top):
-    names = ['IMPORTAR', 'DIAGNOSTICAR', 'ALINHAR', 'CONSTRUIR']
-    subs = ['Duas fontes', 'Qualidade e cobertura', 'Grade horária UTC', '39 atributos']
-    card(d, (65, top, 1215, 560))
-    text(d, (85, top + 16), 'UMA APLICAÇÃO DE PREPARAÇÃO', 17, MUTED, True)
-    for n, name in enumerate(names):
-        x = 90 + n * 280
-        card(d, (x, top + 74, x + 245, top + 220), fill=PANEL_2)
-        text(d, (x + 16, top + 94), f'0{n + 1}', 16, ORANGE, True)
-        text(d, (x + 16, top + 122), name, 22, INK, True)
-        text(d, (x + 16, top + 172), subs[n], 18, MUTED)
-        if n < 3:
-            text(d, (x + 252, top + 142), '→', 26, ORANGE, True)
-    text(d, (75, 600), 'Entradas · operações · saídas · verificações. Sem treino ou avaliação.', 22, MUTED)
-
-
-def draw_horizons(d, top):
-    origin = dt.datetime(2020, 12, 2, 12, tzinfo=dt.timezone.utc)
-    start = origin - dt.timedelta(hours=24)
-    end = origin + dt.timedelta(hours=8)
-    rows = [r for r in hourly if start <= dt.datetime.fromisoformat(r['timestamp_utc']) <= end]
-    x = lambda t: 90 + (t - start).total_seconds() / (end - start).total_seconds() * 1100
-    y = lambda v: 520 - v / 100 * 250
-    d.rectangle((round(x(origin)), top + 20, 1190, 520), fill='#38281b')
-    points = [(round(x(dt.datetime.fromisoformat(r['timestamp_utc']))), round(y(float(r['pm2_5'])))) for r in rows]
-    d.line(points, fill=ORANGE, width=3)
-    d.line((round(x(origin)), top + 20, round(x(origin)), 532), fill=INK, width=2)
-    text(d, (round(x(origin)) + 10, top + 26), 'origem', 18, INK, True)
-    for h in (1, 3, 6):
-        t = origin + dt.timedelta(hours=h)
-        row = next(r for r in rows if dt.datetime.fromisoformat(r['timestamp_utc']) == t)
-        px, py = round(x(t)), round(y(float(row['pm2_5'])))
-        d.ellipse((px - 7, py - 7, px + 7, py + 7), fill=ORANGE)
-        text(d, (px - 22, top + 70 + h * 14), f'+{h} h', 21, ORANGE, True)
-    text(d, (90, 548), 'Histórico anterior a t', 24, INK)
-    text(d, (850, 548), 'Alvos observados', 23, ORANGE, True)
-    text(d, (90, 600), 'Origem real: 02/12/2020 · 12h UTC · não são previsões', 21, MUTED)
-
-
-def draw_samples(d, top):
-    for n, (h, count) in enumerate(((1, '49.124'), (3, '49.068'), (6, '48.984'))):
-        x = 70 + n * 405
-        card(d, (x, top + 20, x + 370, 540))
-        text(d, (x + 25, top + 48), f'{h} HORA' + ('S' if h > 1 else ''), 23, ORANGE, True)
-        text(d, (x + 25, top + 110), count, 58, INK, True, True)
-        text(d, (x + 25, top + 210), 'amostras mantidas', 22, MUTED)
-    text(d, (80, 590), 'Conjuntos independentes · não somar as contagens', 24, MUTED, True)
-
-
-def draw_future(d, top):
-    items = [
-        '1. Executar a persistência',
-        '2. Treinar e validar Random Forest e LSTM',
-        '3. Comparar MAE e RMSE por horizonte',
-    ]
-    for n, item in enumerate(items):
-        text(d, (80, top + 16 + n * 76), item, 31, INK, True)
-    card(d, (70, 530, 1210, 640), fill='#38281b', outline=ORANGE)
-    text(d, (95, 554), 'Ainda não existem resultados preditivos.', 34, ORANGE, True)
-    text(d, (95, 604), 'A comparação futura deve respeitar a ordem temporal.', 20, MUTED)
-
-
-RENDERERS = {
-    'city': draw_city,
-    'world': draw_world,
-    'sources': draw_sources,
-    'series': draw_series,
-    'gaps': draw_gaps,
-    'pipeline': draw_pipeline,
-    'horizons': draw_horizons,
-    'samples': draw_samples,
-    'future': draw_future,
-}
-
-for i, scene in enumerate(scenes):
-    img = Image.new('RGB', (W, H), BG)
-    draw = ImageDraw.Draw(img)
-    top = base(draw, scene, i, len(scenes))
-    RENDERERS[scene['kind']](draw, top)
-    img.save(WORK / f'scene-{i}.png')
-    if i == 0:
-        img.save(OUT / 'capa.jpg', quality=90, subsampling=0)
-
-# Vídeo: um único filtro com zoom muito ligeiro e crossfades curtos.
-cmd = [ff, '-y', '-v', 'error']
-for i, scene in enumerate(scenes):
-    cmd += ['-loop', '1', '-framerate', str(FPS), '-t', f"{scene['duration']:.3f}",
-            '-i', str(WORK / f'scene-{i}.png')]
-    cmd += ['-i', scene['audio']]
-
-filters = []
-for i, scene in enumerate(scenes):
-    duration = f"{scene['duration']:.3f}"
-    zoom = (f"scale=1280:720,trim=duration={duration},"
-            "setpts=PTS-STARTPTS,fps=24,format=yuv420p")
-    if i == 0:
-        zoom += ',fade=t=in:st=0:d=0.4'
-    if i == len(scenes) - 1:
-        zoom += f',fade=t=out:st={scene["duration"] - 0.4:.3f}:d=0.4'
-    filters.append(f'[{2 * i}:v]{zoom}[v{i}]')
-    audio = f'[{2 * i + 1}:a]aresample=48000,asetpts=PTS-STARTPTS'
-    if i == 0:
-        audio += ',afade=t=in:st=0:d=0.25'
-    if i == len(scenes) - 1:
-        audio += f',afade=t=out:st={scene["duration"] - 0.35:.3f}:d=0.35'
-    filters.append(f'{audio}[a{i}]')
-
-current_v, current_a = 'v0', 'a0'
-elapsed = scenes[0]['duration']
-for i in range(1, len(scenes)):
-    offset = elapsed - XFADE
-    filters.append(f'[{current_v}][v{i}]xfade=transition=fade:duration={XFADE:.2f}:'
-                   f'offset={offset:.3f}[vx{i}]')
-    filters.append(f'[{current_a}][a{i}]acrossfade=d={XFADE:.2f}:c1=tri:c2=tri[ax{i}]')
-    current_v, current_a = f'vx{i}', f'ax{i}'
-    elapsed += scenes[i]['duration'] - XFADE
-
-cmd += [
-    '-filter_complex', ';'.join(filters),
-    '-map', f'[{current_v}]', '-map', f'[{current_a}]',
-    '-c:v', 'libx264', '-preset', 'slow', '-crf', '26', '-tune', 'stillimage',
-    '-profile:v', 'high', '-level:v', '4.0', '-g', '48', '-keyint_min', '24',
-    '-sc_threshold', '0', '-pix_fmt', 'yuv420p',
-    '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709',
-    '-c:a', 'aac', '-b:a', '80k', '-ar', '48000',
-    '-movflags', '+faststart',
-    '-metadata', 'title=PM2.5 em Luanda — vídeo educativo',
-    '-metadata', 'author=Jeorgel Chitende',
-    str(OUT / 'pm25-luanda.mp4'),
-]
-subprocess.run(cmd, check=True)
-
-
-def stamp(value):
-    value = max(0.0, value)
-    return f'{int(value // 3600):02}:{int(value % 3600 // 60):02}:{value % 60:06.3f}'
-
-
-def caption_chunks(value, max_words=12, max_chars=52):
-    parts = re.split(r'(?<=[;:])\s+', value)
-    chunks = []
-    for part in parts:
-        words = part.split()
-        while len(words) > max_words:
-            chunk, used = [], 0
-            for word in words:
-                candidate = ' '.join(chunk + [word])
-                if chunk and (len(chunk) >= max_words or len(candidate) > max_chars):
-                    break
-                chunk.append(word)
-                used += 1
-            chunks.append(' '.join(chunk))
-            words = words[used:]
-        if words:
-            chunks.append(' '.join(words))
-    merged = []
-    for chunk in chunks:
-        if merged and len(merged[-1]) + len(chunk) + 1 <= 40:
-            merged[-1] += ' ' + chunk
-        else:
-            merged.append(chunk)
-    return merged
-
-
-vtt = ['WEBVTT\n']
-scene_starts = []
-cursor = 0.0
-for i, scene in enumerate(scenes):
-    scene_starts.append(cursor)
-    cursor += scene['duration'] - (XFADE if i else 0)
-
-for i, scene in enumerate(scenes):
-    for line, timing in zip(scene['lines'], scene['timings']):
-        chunks = caption_chunks(line)
-        total_words = sum(len(chunk.split()) for chunk in chunks)
-        voiced_begin = scene_starts[i] + timing['start'] + timing['voiced_start']
-        voiced_length = timing['voiced_duration']
-        used = 0
-        for chunk in chunks:
-            count = len(chunk.split())
-            start = voiced_begin + voiced_length * used / total_words
-            end = voiced_begin + voiced_length * (used + count) / total_words
-            end = max(start + 0.9, end)
-            vtt.append(f'{stamp(start)} --> {stamp(end)}\n'
-                       + textwrap.fill(chunk, 52) + '\n')
-            used += count
-
-(OUT / 'pm25-luanda.vtt').write_text('\n'.join(vtt), encoding='utf-8')
-(OUT / 'transcricao.txt').write_text(
-    'PM2.5 em Luanda — vídeo educativo\n'
-    'Narração sintética portuguesa; não imita o autor.\n\n'
-    + '\n\n'.join(s['title'] + '\n' + ' '.join(s['lines']) for s in scenes) + '\n',
-    encoding='utf-8')
-production = {
-    'duration_seconds': round(elapsed, 3),
-    'voice': meta['voice'],
-    'speech_rate_wpm': meta['rate'],
-    'pause_between_lines_seconds': meta['gap'],
-    'crossfade_seconds': XFADE,
-    'resolution': '1280x720',
-    'frame_rate': FPS,
-    'captions': {
-        'language': 'pt',
-        'cues': sum(1 for line in vtt if '-->' in line),
-        'alignment': 'repartidas proporcionalmente dentro da fala detetada em cada frase'
-    },
-    'scenes': [
-        {'scene': i + 1, 'start': round(scene_starts[i], 3),
-         'duration': round(scene['duration'], 3), 'title': scene['title']}
-        for i, scene in enumerate(scenes)
-    ],
-    'data': 'assets/data/audit.json',
-    'nature': 'Apresentação dos dados fornecidos; não é gravação de execução nem previsão.'
-}
-(OUT / 'producao.json').write_text(json.dumps(production, ensure_ascii=False, indent=2), encoding='utf-8')
-print('Vídeo:', round(elapsed, 2), 'segundos', flush=True)
+if __name__ == "__main__":
+ render()

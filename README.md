@@ -385,3 +385,57 @@ Abrir uma explicação em modal conserva a posição de leitura da página. O hi
 O painel de concentração apresenta área sob a curva diária, maior média diária assinalada, ausências em azul-cinzento e três indicadores relativos ao período seleccionado: média ponderada pelas horas observadas, máximo horário e cobertura. A média ponderada parte dos agregados diários exportados (arredondados a quatro casas), sendo apresentada com duas casas decimais. Não foram acrescentadas classes de risco ou limites sanitários ao gráfico.
 
 Com JavaScript, o visitante pode tocar/clicar na curva ou percorrer um controlo nativo de intervalo com teclado para consultar cada dia e a sua cobertura. Dias sem observação mostram texto de ausência e nenhum ponto a zero. O SVG e a tabela continuam disponíveis sem JavaScript. Se o CSV derivado não carregar, indicadores relativos ao histórico completo são ocultados ao escolher um ano para evitar atribuição indevida ao período. As fontes e os números originais não foram alterados.
+
+### Evolução visual do projecto
+
+A secção 06 usa um percurso de seis etapas, com estado actual destacado, visual específico por etapa, previsto/entregue/pendência e ligação à evidência. Em computador a selecção fica à esquerda e o detalhe à direita; em telemóvel o percurso é horizontal e o detalhe aparece abaixo. Setas, Home/End e botões anterior/seguinte permitem navegar; as etapas têm âncoras próprias. Sem JavaScript, todos os detalhes permanecem visíveis. A sequência não é uma percentagem de progresso e não apresenta modelação planeada como concluída.
+
+## Leitura principal e gráficos móveis — 24/11/2026
+
+Esta revisão simplifica a apresentação actual, preservando o mapa global, a evolução interactiva, os ficheiros de evidência e o estado das secções que já estavam ocultas. Os acessos principais no início são Dados e Vídeo (2:45); a evolução mantém um acesso directo. O menu passa a incluir Vídeo como destino dentro de Dados e materiais, com indicação activa própria.
+
+A leitura principal tem aproximadamente 1.570–1.600 palavras inicialmente visíveis nos cenários testados. O protocolo detalhado de avaliação foi preservado em `metodo.html#protocolo-comparacao`; a lista de cidades pode ser expandida junto ao mapa. O texto essencial continua a distinguir origem declarada, ausências, alvos históricos, hipótese de disponibilidade e fases de modelação pendentes.
+
+As vistas móveis de PM2.5, temperatura e horizontes mostram o intervalo completo até 650 px, sem exigir deslocamento lateral. `Ampliar gráfico` troca para o SVG integral e permite deslocamento dentro da região; o botão volta à visão completa. A vista móvel usa os mesmos pontos diários, sem redução de amostras, suavização ou interpolação. Nos períodos anuais da concentração, ano e dados permanecem sincronizados em ambas as vistas; o cursor e a consulta diária usam as coordenadas de cada SVG. Sem JavaScript, a visão completa e as tabelas permanecem acessíveis.
+
+Para regenerar os dez SVG adaptados, após os derivados diários:
+
+```sh
+python3 scripts/build_mobile_charts.py
+```
+
+`metodo.html#guia-gravacao` contém um roteiro de cinco momentos para uma futura gravação real da aplicação com a voz do autor. Não foi fabricada uma gravação nem alterada a identidade da narração actual. A voz do autor, imagens locais próprias e uma execução gravada continuam dependentes desse material. Testes com pessoas que não conhecem o projecto continuam pendentes; testes técnicos não substituem essa avaliação.
+
+### Atalhos flutuantes em Resultados e materiais
+
+Logo abaixo das estatísticas, três ligações permitem navegar para Concentração / Dados históricos, Duas fontes / Cobertura conferida e Um instante / Três horizontes. A barra mantém-se sob o cabeçalho apenas dentro da secção. A altura real é considerada no deslocamento para não ocultar títulos, e o elemento activo acompanha a leitura. São âncoras nativas, acessíveis também sem JavaScript.
+
+### Conteúdos de dados por separadores
+
+Os três atalhos abaixo das estatísticas passam a trocar o conteúdo no mesmo espaço, sem deslocamento da página ou flutuação. Com JavaScript, apenas um painel fica visível; setas, Home/End e Tab permitem navegar. A selecção conserva uma âncora partilhável, e um link directo para qualquer elemento de um painel revela primeiro o conteúdo correspondente. Sem JavaScript, as três áreas continuam visíveis e as ligações navegam normalmente. Transição discreta desactivada com movimento reduzido ou pausa global.
+
+## Vídeo mais ilustrativo e navegação por capítulos — 24/11/2026
+
+O vídeo actual tem cerca de 2:58, dez cenas animadas, narração sintética em português, 48 trechos de legenda e dez capítulos temporais. A versão substitui a exposição predominantemente estática por revelação da curva, posições sem observação, operações de preparação, lags/média do passado e aparecimento dos alvos históricos. As animações não executam a aplicação nem produzem previsões. Os blocos da lacuna e a posição dos lags são esquemáticos, com ressalva no próprio vídeo; os valores exibidos vêm dos derivados locais.
+
+A cena das entradas usa a origem 02/12/2020 12h UTC e mostra t−24/t−6/t−3/t−2/t−1, incluindo a média calculada dos três valores anteriores. A maior lacuna usa as datas de `lacunas.json`. O roteiro mantém separados dados atribuídos à OpenWeather, medições locais não certificadas e resultados preditivos ainda inexistentes. A imagem de Luanda é esquemática, não filmada.
+
+A secção do leitor inclui capítulos seleccionáveis, capítulo activo, ligação a transcrição/legendas/download e controlo adicional de ecrã inteiro quando suportado. Escolher um capítulo apenas posiciona o leitor; não inicia automaticamente a reprodução. Sem JS, as âncoras de tempo do MP4 e a transcrição continuam disponíveis. As legendas reservam uma área abaixo dos diagramas. A narração é sintetizada por frase; os trechos de legenda são repartidos proporcionalmente na fala detectada, sem pretensão de alinhamento fonético palavra a palavra.
+
+Geração continua em `scripts/make_narration.py` e `scripts/render_video.py`, com Pillow e imageio-ffmpeg num ambiente separado do site. Temporários em `/tmp/pm25-video`; vídeo 1280×720, 24 fps, H.264/AAC, aproximadamente 3,2 MB. Os scripts geram também poster, VTT de legendas, VTT de capítulos, transcrição e manifesto. Não foi gravada a voz do autor, não houve filmagem em Luanda ou execução gravada da aplicação. Esses materiais continuam pendentes para uma futura versão autêntica.
+
+## Mapa com estatísticas de Luanda — 24/11/2026
+
+A vista principal de “O ar não conhece fronteiras” passa a usar a série de PM2.5 atribuída à OpenWeather, a mesma já fornecida para preparação e construção dos conjuntos supervisionados. O rótulo é “Geografia dos dados”, evitando identificar estimativas como medições locais certificadas. Não existem modelos treinados nesta entrega; não se apresenta o mapa como resultado de treino.
+
+Para Luanda estão disponíveis média aritmética das concentrações horárias presentes, máximo horário e cobertura relativamente à grade, por histórico completo e ano. 2020 e 2026 estão identificados como parciais. Média do histórico 2020–2026 não é média anual; cobertura de um período parcial não significa cobertura de todo o ano. Ausências não entram como zero. Valores exactos derivam do CSV preparado cujo SHA-256 é comparado com o manifesto anterior.
+
+```sh
+python3 scripts/build_map_statistics.py --pm25 /caminho/pm25_preparado.csv
+```
+
+Resultado público: `assets/data/luanda-map-statistics.json`, também incorporado no HTML para que as interacções não dependam de pedidos de rede. O arquivo identifica insumo, hash, agregação, limites UTC e ressalvas. Não inclui credenciais nem caminhos pessoais. Não há importação, processamento ou alteração da aplicação separada.
+
+A OMS V8.0 permanece numa vista alternativa explícita. Valores OMS de outras cidades não são reutilizados na vista OpenWeather. Nessa vista, só Luanda tem histórico disponível; outros pontos são referências geográficas com informação de indisponibilidade do histórico no site, sem afirmar inexistência de medição ou poluição. Para preencher outras cidades com a mesma fonte, é necessário obter e conferir os históricos correspondentes, com períodos e coordenadas definidos. Nenhuma chave foi solicitada, armazenada ou exposta; o mapa não chama a API.
+
+Na vista OMS, Luanda continua sem valor comunicado na base consultada. As duas fontes têm tabelas textuais separadas e continuam legíveis sem JavaScript. Não se criam rankings, comparações directas entre fontes, categorias de risco ou certificação de representatividade local. Documentação oficial consultada: OpenWeather Air Pollution API e History Bulk; o histórico PM2.5 do mapa usa exclusivamente o CSV de poluição preparado, não o produto meteorológico como substituto de concentração.

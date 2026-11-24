@@ -10,6 +10,7 @@ if (seriesPeriod) {
     const image = document.querySelector('#pm25-series-chart');
     const status = document.querySelector('#series-status');
     image.src = `assets/data/pm25-${value}.svg`;
+    image.closest('picture')?.querySelector('source')?.setAttribute('srcset', `assets/data/pm25-${value}-mobile.svg`);
     image.alt = `Médias diárias de PM2.5 ${value === 'todos' ? 'em todo o histórico' : 'em '+value}, com faixa das horas ausentes. Valores em µg/m³.`;
     status.textContent = `${value === 'todos' ? 'Todo o histórico' : value} · médias diárias; faixa inferior: horas ausentes de PM2.5. Sem interpolação.`;
     if (!document.documentElement.classList.contains('motion-paused') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -48,10 +49,11 @@ if (seriesPeriod) {
     document.querySelector('#concentration-day-coverage').textContent = `${row.observed} de ${row.grid} horas observadas · ${row.missing} ausentes${row.observed < row.grid && row.observed > 0 ? ' · média de dia incompleto' : ''}`;
     slider.setAttribute('aria-valuetext', `${date(row.date)}: ${value}; ${row.observed} de ${row.grid} horas observadas`);
     const ceiling = Math.max(50, Math.ceil(Math.max(...selected.filter(r => r.mean !== null).map(r => r.mean))/50)*50);
-    const x = (64+(index+.5)/selected.length*912)/10;
+    const overview = image.currentSrc.includes('-mobile.svg');
+    const x = overview ? (44+(index+.5)/selected.length*420)/4.8 : (64+(index+.5)/selected.length*912)/10;
     cursor.hidden = false;
     cursor.style.left = `${x}%`;
-    cursor.style.setProperty('--point-y', row.mean === null ? '100%' : `${(60+(ceiling-row.mean)/ceiling*290-60)/290*100}%`);
+    cursor.style.setProperty('--point-y', row.mean === null ? '100%' : `${(ceiling-row.mean)/ceiling*100}%`);
     cursor.classList.toggle('is-missing', row.mean === null);
     if (announce) document.querySelector('#concentration-day-announcement').textContent = `${date(row.date)}: ${value}.`;
   }
@@ -89,6 +91,7 @@ if (seriesPeriod) {
     updatePeriod();
     panel.querySelector('.concentration-inspector').hidden = false;
     seriesPeriod.addEventListener('change', updatePeriod);
+    image.addEventListener('load', () => showDay(Number(slider.value)));
     slider.addEventListener('input', () => showDay(Number(slider.value)));
     slider.addEventListener('change', () => showDay(Number(slider.value), true));
     let pointerStart = null;
@@ -98,7 +101,8 @@ if (seriesPeriod) {
       const start = pointerStart; pointerStart = null;
       if (Math.hypot(event.clientX-start.x,event.clientY-start.y) > 10) return;
       const bounds = image.getBoundingClientRect();
-      const position = ((event.clientX-bounds.left)/bounds.width*1000-64)/912;
+      const overview = image.currentSrc.includes('-mobile.svg');
+      const position = overview ? ((event.clientX-bounds.left)/bounds.width*480-44)/420 : ((event.clientX-bounds.left)/bounds.width*1000-64)/912;
       showDay(Math.max(0,Math.min(selected.length-1,Math.floor(position*selected.length))), true);
     });
     image.addEventListener('pointercancel', () => {pointerStart = null;});
@@ -108,3 +112,96 @@ if (seriesPeriod) {
     cursor.hidden = true;
   });
 }
+
+/* Visão completa no telemóvel; o SVG integral fica disponível por ampliação. */
+for (const picture of document.querySelectorAll('[data-chart-picture]')) {
+  const key = picture.dataset.chartPicture;
+  const region = document.getElementById('chart-region-'+key);
+  const button = document.querySelector('[data-chart-zoom="'+key+'"]');
+  const source = picture.querySelector('source');
+  if (!region || !button || !source) continue;
+  button.hidden = false;
+  button.addEventListener('click', () => {
+    const expanded = button.getAttribute('aria-pressed') !== 'true';
+    button.setAttribute('aria-pressed',String(expanded));
+    button.textContent = expanded ? 'Voltar à visão completa' : 'Ampliar gráfico';
+    region.classList.toggle('chart-zoomed',expanded);
+    source.media = expanded ? 'not all' : '(max-width: 650px)';
+    region.scrollLeft = 0;
+  });
+}
+
+/* Separadores progressivos: a selecção troca o painel sem deslocar a página. */
+(() => {
+  const navigation = document.querySelector('.materials-navigation');
+  if (!navigation) return;
+  const tabs = [...navigation.querySelectorAll('a[href^="#"]')];
+  const panels = tabs.map(tab => document.querySelector(tab.getAttribute('href')));
+  if (panels.some(panel => !panel)) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let selected = -1;
+  let animation;
+  function select(index, {focus=false,updateUrl=false,animate=true}={}) {
+    if (index < 0 || index >= panels.length) return;
+    const changed = selected !== index;
+    selected = index;
+    tabs.forEach((tab,i) => {
+      tab.setAttribute('aria-selected',String(i === index));
+      tab.tabIndex = i === index ? 0 : -1;
+      panels[i].hidden = i !== index;
+    });
+    if (updateUrl) history.replaceState(null,'',tabs[index].getAttribute('href'));
+    if (focus) tabs[index].focus({preventScroll:true});
+    if (changed) {
+      animation?.cancel();
+      if (animate && !reduced.matches && !document.documentElement.classList.contains('motion-paused')) {
+        animation = panels[index].animate([{opacity:.45,transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}],{duration:200,easing:'ease-out'});
+      }
+    }
+  }
+  function indexForTarget(target) {
+    return panels.findIndex(panel => panel === target || panel.contains(target));
+  }
+  function followHash() {
+    let target;
+    try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch {return;}
+    const index = indexForTarget(target);
+    if (index >= 0) select(index,{animate:false});
+  }
+  navigation.setAttribute('role','tablist');
+  navigation.setAttribute('aria-orientation','horizontal');
+  tabs.forEach((tab,index) => {
+    tab.id = `materials-tab-${index+1}`;
+    tab.setAttribute('role','tab');
+    tab.setAttribute('aria-controls',panels[index].id);
+    tab.removeAttribute('aria-current');
+    panels[index].setAttribute('role','tabpanel');
+    panels[index].setAttribute('aria-labelledby',tab.id);
+    panels[index].tabIndex = 0;
+    tab.addEventListener('click',event => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      select(index,{updateUrl:true});
+    });
+    tab.addEventListener('keydown',event => {
+      let next;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (index+1)%tabs.length;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (index-1+tabs.length)%tabs.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = tabs.length-1;
+      if (next === undefined) return;
+      event.preventDefault();
+      select(next,{focus:true,updateUrl:true});
+    });
+  });
+  document.addEventListener('materials:reveal',event => {
+    const index = indexForTarget(event.detail?.target);
+    if (index >= 0) select(index,{animate:false});
+  });
+  window.addEventListener('hashchange',followHash);
+  window.addEventListener('popstate',followHash);
+  reduced.addEventListener('change',() => {if (reduced.matches) animation?.cancel();});
+  navigation.classList.add('materials-tabs-ready');
+  select(0,{animate:false});
+  followHash();
+})();

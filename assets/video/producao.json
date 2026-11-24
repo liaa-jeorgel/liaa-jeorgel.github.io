@@ -1,72 +1,86 @@
 {
-  "duration_seconds": 177.365,
+  "duration_seconds": 177.994,
   "voice": "Joana — macOS, síntese de voz",
   "speech_rate_wpm": 156,
-  "pause_between_lines_seconds": 0.28,
-  "crossfade_seconds": 0.65,
   "resolution": "1280x720",
   "frame_rate": 24,
   "captions": {
     "language": "pt",
     "cues": 48,
-    "alignment": "repartidas proporcionalmente dentro da fala detetada em cada frase"
+    "alignment": "proporcional dentro da fala detectada de cada frase; revisão palavra-a-palavra pendente"
   },
   "scenes": [
     {
       "scene": 1,
-      "start": 0.0,
-      "duration": 19.518,
-      "title": "O ar que nem sempre vemos"
+      "start": 0,
+      "duration": 16.776,
+      "title": "O que estamos a tentar antecipar?",
+      "kind": "city"
     },
     {
       "scene": 2,
-      "start": 19.518,
-      "duration": 21.082,
-      "title": "Contexto global, com cautela"
+      "start": 16.776,
+      "duration": 18.204,
+      "title": "O contexto não é uma comparação",
+      "kind": "world"
     },
     {
       "scene": 3,
-      "start": 39.949,
-      "duration": 25.182,
-      "title": "Dois históricos, um percurso"
+      "start": 34.98,
+      "duration": 16.44,
+      "title": "Duas fontes, a mesma hora",
+      "kind": "sources"
     },
     {
       "scene": 4,
-      "start": 64.481,
-      "duration": 19.225,
-      "title": "49.896 observações preservadas"
+      "start": 51.42,
+      "duration": 17.984,
+      "title": "Veja a série, não apenas os números",
+      "kind": "series"
     },
     {
       "scene": 5,
-      "start": 83.056,
-      "duration": 17.449,
-      "title": "Ausência não é zero"
+      "start": 69.404,
+      "duration": 15.511,
+      "title": "Uma lacuna não vale zero",
+      "kind": "gaps"
     },
     {
       "scene": 6,
-      "start": 99.855,
-      "duration": 13.583,
-      "title": "Preparação transparente"
+      "start": 84.915,
+      "duration": 17.29,
+      "title": "O que a preparação transforma?",
+      "kind": "pipeline"
     },
     {
       "scene": 7,
-      "start": 112.788,
-      "duration": 18.507,
-      "title": "Uma origem, três alvos"
+      "start": 102.205,
+      "duration": 19.365,
+      "title": "As entradas olham apenas para trás",
+      "kind": "features"
     },
     {
       "scene": 8,
-      "start": 130.645,
-      "duration": 15.779,
-      "title": "39 atributos por horizonte"
+      "start": 121.57,
+      "duration": 18.691,
+      "title": "Depois de t estão os alvos",
+      "kind": "horizons"
     },
     {
       "scene": 9,
-      "start": 145.773,
-      "duration": 32.242,
-      "title": "O que falta responder?"
+      "start": 140.261,
+      "duration": 18.832,
+      "title": "Nem toda hora forma uma amostra",
+      "kind": "samples"
+    },
+    {
+      "scene": 10,
+      "start": 159.093,
+      "duration": 18.901,
+      "title": "A comparação ainda está por fazer",
+      "kind": "future"
     }
   ],
   "data": "assets/data/audit.json",
-  "nature": "Apresentação dos dados fornecidos; não é gravação de execução nem previsão."
+  "nature": "Animação do método e dos CSV; não é gravação da aplicação, filmagem local ou resultado preditivo."
 }

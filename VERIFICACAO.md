@@ -376,3 +376,99 @@ Verificado em Chromium local: sintaxe de todos os JS, `git diff --check`, ausên
 - Chromium local: metadados 177,375 s, 1280×720, faixa `pt` com 48 cues em modo `showing`; seek para 100 s e reprodução até 104,933 s com o ficheiro carregado como Blob; legenda activa em 100 s corresponde à frase correcta. Sem erros de consola e sem deslocamento horizontal da página.
 - FFmpeg: média de volume −19,3 dB e pico −5,4 dB, sem silêncio total. Não houve revisão humana integral da pronúncia, nem testes em Safari/Firefox ou com leitor de ecrã.
 - Nenhum commit, push ou publicação.
+
+## Evolução visual — 24/11/2026
+
+Substituídas as linhas de entrega por percurso de seis etapas seleccionáveis, detalhe com visual próprio, previsto/entregue/pendência e evidência, indicação do ponto actual e acesso à próxima fase. Sem alterar dados científicos ou estados. JavaScript progressivo em `assets/evolution-explorer.js`, sem bibliotecas novas ou rotação automática.
+
+Executado em Chromium, 320/768/1440 px, claro/escuro e movimento reduzido: seis etapas seleccionáveis, um detalhe visível, três campos por etapa, correspondência de âncora e painel, teclado (setas/Home/End), botões de navegação, acesso à próxima fase, deeplink para série e título abaixo do cabeçalho. Sem erros JS e sem scroll horizontal da página. Corrigida a largura mínima do contentor móvel para manter o deslocamento apenas na lista horizontal. Sem JS em 360/1440: seis detalhes visíveis e âncoras funcionais. Inspeccionadas capturas estáveis em 1440 claro e detalhe em 360 claro. Parser confirma IDs e referências locais válidas; sintaxe JS e diff verificados. Leitor de ecrã, Safari e Firefox não testados. Não houve publicação.
+
+## Simplificação editorial e prioridade aos dados — 24/11/2026
+
+### Alterações
+
+- Acessos a Dados e Vídeo no início e no menu, preservando o acesso à evolução. Vídeo é subdestino da secção de materiais; não foi criada uma fase científica nova.
+- Repetições reduzidas; protocolo pormenorizado de avaliação preservado em página interna. Lista de cidades do mapa recolhida num controlo nativo, com todos os pontos e a tabela mantidos. Secção de projectos relacionados permanece oculta como estava antes desta revisão.
+- Vistas adaptadas ao ecrã até 650 px: concentração, temperatura e exemplo de horizontes. Ampliação opcional para o SVG integral e regresso à vista completa, sem bibliotecas adicionais. O SVG integral e os valores de origem permanecem inalterados.
+- Guia para gravação autêntica e narração do autor em `metodo.html#guia-gravacao`. Não foram substituídas a voz sintética nem a apresentação educativa por uma simulação de gravação.
+- Corrigida a indicação do menu: secções ocultas deixam de participar no cálculo da secção activa e a última secção é reconhecida no fundo da página, mesmo quando não pode atingir o limiar do cabeçalho.
+
+### Verificações executadas
+
+Chromium local, movimento reduzido, larguras 320/360/768/1440 px (360 em modo escuro):
+
+- Dados e Vídeo levam aos destinos, indicam correctamente o elemento activo e mantêm os títulos abaixo do cabeçalho.
+- Os três gráficos mostram a vista completa sem overflow da região no telemóvel; ampliação cria uma área interna deslocável, e o botão restitui a vista completa. A página não apresenta deslocamento horizontal.
+- Selecção de 2025/2026 sincroniza o SVG móvel e integral; selecção de ano durante ampliação e posterior regresso verificadas.
+- Home e seta direita no controlo diário, activação por Enter do botão de ampliação e selecção real por clique/toque: verificadas. Dia sem observação mantém o texto de ausência e não é convertido em zero.
+- Lista expandida de cidades continua a permitir selecção e leitura no mapa. Não houve erros JS nem respostas HTTP locais >=400 nesses cenários.
+- Sem JavaScript a 360 px: os três SVG móveis carregam ajustados ao ecrã, a tabela de concentração abre e todos os seis detalhes da evolução ficam disponíveis.
+- Leitura inicial: 1.596 palavras a 320/360, 1.568 a 768 e 1.590 a 1440 px, por `innerText` após carregamento sem abrir detalhes; a contagem varia com controlos responsivos e não é comparável directamente à avaliação do portal.
+- Todos os destinos do menu por teclado em 360/1440; valores e coordenadas da consulta diária nas duas vistas; links do protocolo e guia de gravação: verificados.
+- SVG móveis de concentração confrontados com os agregados de origem: todos os 2.110 valores diários disponíveis na vista integral e os 31/365/363/363/364/360/264 nas vistas de 2020–2026 estão presentes, nas coordenadas esperadas dentro da precisão de arredondamento do desenho. Ausências continuam a interromper os segmentos. Nenhuma reamostragem.
+- Parser: 67 IDs/87 referências no índice; 79 IDs/133 referências em método; 28 IDs/55 referências na página educativa; IDs únicos e âncoras/ficheiros locais válidos. XML dos SVG novos válido. Sintaxe dos scripts alterados e `git diff --check`: passaram.
+- Inspeccionadas capturas de viewport do gráfico a 320 claro e início a 360 escuro. Capturas adicionais em 768/1440 geradas. Não foi realizada inspecção humana de todos os estados de ampliação em todas as larguras.
+
+### Pendências
+
+Não houve teste com utilizadores, leitor de ecrã, Safari/Firefox ou auditoria integral de acessibilidade nesta revisão. A nova voz e a gravação real da aplicação dependem de material autêntico; o vídeo e as suas fontes não foram alterados. Dados de origem, aplicação separada, ficheiros CSV e resultados científicos não foram modificados. Nenhum commit, push ou publicação.
+
+## Atalhos flutuantes dos dados — 24/11/2026
+
+Adicionadas três âncoras visuais imediatamente depois das estatísticas em Resultados e materiais: concentração, cobertura das duas fontes e três horizontes. Barra sticky confinada à secção, indicação activa e altura observada para reservar espaço nos destinos (incluindo vídeo). Sem novos componentes de processamento ou alteração dos dados.
+
+Testes executados em Chromium a 320/768/1440 px, com movimento reduzido: três destinos por teclado, indicação activa, barra abaixo do cabeçalho, títulos abaixo da barra, ausência de overflow horizontal da página e de erros JS. Ao sair para Como funciona, a barra deixa a área visível. A indicação activa regressa à concentração durante deslocamento inverso. Sem JS a 360 px: ligação nativa à cobertura funcional e título desobstruído. Capturas de 320 e 1440 px inspeccionadas. IDs/âncoras locais, sintaxe JS e diff verificados. Outros navegadores e leitor de ecrã não testados nesta revisão. Não houve publicação.
+
+### Ajuste posterior: atalhos sem flutuação
+
+Retirado `position: sticky` da navegação de dados, incluindo o posicionamento móvel e a reserva dinâmica da sua altura. Os três botões permanecem abaixo das estatísticas e deslocam-se normalmente com a página. Mantidos os destinos e a indicação activa. Conferidas a sintaxe JavaScript e a ausência de problemas de whitespace; não repetida a suite de navegador nesta alteração de posicionamento.
+
+## Separadores dos dados — 24/11/2026
+
+Os três botões alternam o conteúdo correspondente no mesmo local, sem scroll ou comportamento flutuante. Aplicados papéis tablist/tab/tabpanel, selecção explícita, roving tabindex e navegação por setas/Home/End. Os links directos continuam válidos; a navegação global revela um painel oculto antes de posicionar o destino. Sem JS, as três áreas permanecem disponíveis. A transição de 200 ms respeita movimento reduzido e pausa global.
+
+Chromium a 320 (escuro)/768/1440 px, movimento reduzido: os três cliques conservaram scrollY (tolerância inferior a 2 px); apenas um painel visível; selecção e painel correspondem; sem overflow horizontal da página ou erros JS. Teclado, foco, selecção de ano e carga dos gráficos passaram. Links directos ao painel de horizontes e à região interna de temperatura revelaram o conteúdo correcto. Sem JS a 360 px: três painéis acessíveis e ligação nativa funcional. Captura móvel inspeccionada. Parser de IDs/âncoras, sintaxe JS e diff verificados. Leitor de ecrã e outros navegadores não testados. Sem alteração dos dados nem publicação.
+
+## Vídeo explicativo animado — 24/11/2026
+
+Substituída a peça anterior por dez cenas didácticas: problema e dimensão das partículas, contexto global, duas fontes alinhadas, revelação do histórico, ausência sem preenchimento, operações da aplicação, atributos do passado, três alvos históricos, amostras elegíveis e comparação futura. Valores derivados dos mesmos CSV; ausência de resultados preditivos reiterada. Posições dos lags e blocos de lacuna identificados como esquemáticos. Média de três horas calculada dos valores reais anteriores à origem, sem usar a hora de origem ou alvos futuros.
+
+Entregue: MP4 1280×720, 24 fps, H.264/AAC, 178,116 s no leitor, 3.192.996 bytes; voz sintética Joana; 48 cues de legendas, dez capítulos WebVTT, transcrição, poster e manifesto regenerados. Sem música, clonagem de voz ou gravação da aplicação. O guião e os scripts de produção foram actualizados; nada mudou nos ficheiros científicos de origem.
+
+Verificações executadas:
+
+- Chromium em 360 (escuro)/768/1440 px com movimento reduzido: dez capítulos presentes; selecção via Enter e clique em cinco pontos (incluindo primeiro e último); seek confirmado com tolerância <0,7 s; selecção não inicia reprodução automaticamente. Reprodução posterior e pausa funcionais.
+- Leitor confirma 1280×720 e duração dentro de 2–3 minutos; faixas de capítulos (dez cues) e legendas disponíveis. Sem erros JS ou ficheiros HTTP locais em falta. Sem overflow horizontal da página. Sem JS a 360 px: ligações temporais nativas, transcrição e layout acessíveis.
+- Pré-visualização com suporte HTTP Range para testar o seek sem a limitação do servidor Python simples. Entrega em produção permanece não testada.
+- Botão adicional de ecrã inteiro verificado em Chromium; resultado assíncrono observado. O código oferece instrução de controlo nativo em caso de recusa pelo navegador. Ocultação do acesso flutuante junto ao vídeo/chapítulos conferida após a actualização dos observadores.
+- FFmpeg: duração 2:58,12; áudio AAC presente, média −19,2 dB e pico −5,6 dB. Verificadas as 48 legendas em ordem, sem sobreposição temporal e dentro do filme. Alinhamento é proporcional dentro da fala detectada; não foi feita revisão humana integral da pronúncia e de cada palavra.
+- Comparação de frames em instantes diferentes confirmou alteração visual nas cenas de cidade, série, lacunas, preparação, atributos, alvos e amostras. Inspeccionados frames finais das cenas 1/5/7/8/10 e capturas do leitor em 360 escuro/1440 claro, além dos capítulos em 360 claro. Área inferior sem diagramas foi reservada para as legendas.
+- Sintaxe JS, parser de IDs/âncoras/ficheiros, validade dos links MP4 com fragmento temporal e diff verificados. Caches Python de compilação repostos ao estado anterior para não incluir alterações binárias incidentais.
+
+Limites: testes com utilizadores, leitor de ecrã, Safari/Firefox e revisão audiovisual humana completa continuam pendentes. A voz do autor, imagens locais autênticas e gravação real da aplicação não foram fabricadas. Sem alteração da aplicação, commit, push ou publicação.
+
+## Mapa: OpenWeather e estatísticas de Luanda — 24/11/2026
+
+### Fonte e cálculo
+
+Lido o CSV preparado de PM2.5 indicado anteriormente pelo autor. SHA-256 confere com `assets/data/audit.json`. Novo gerador `scripts/build_map_statistics.py`: oito períodos (histórico e 2020–2026), grade única e horária, média das concentrações presentes, máximo, mínimo, contagens e cobertura. Média de todo o histórico confere com a auditoria anterior dentro de 1e-9. Valores de referência: média 24,440456148789483 µg/m³; máximo horário 568,32 µg/m³; cobertura 98,01980198019803%; 49.896 observações em 50.904 horas, 1.008 ausentes. Anos parciais 2020/2026 reconhecidos a partir dos limites UTC reais.
+
+A referência geográfica não autentica a origem física dos ficheiros. Não foi executado treino nem criada validação instrumental. As estatísticas não são valores OMS, não medem toda a cidade e não foram calculadas do ficheiro meteorológico. Dados OMS anteriores permaneceram intactos e separados.
+
+### Entrega
+
+Vista padrão OpenWeather com Luanda, select por período, média/máximo/cobertura, contagens, período UTC e JSON descarregável. Fonte declarada em cada vista. OMS V8.0 acessível por controlo separado; nenhum valor OMS é apresentado como OpenWeather. Outros pontos da vista OpenWeather informam que falta histórico da respectiva cidade neste site. Sem API, credenciais ou conteúdo remoto carregado pelo mapa. Marcadores continuam geográficos e aproximados, sem alegar estações certificadas ou movimentos de ar. Tabelas das duas fontes mantidas separadas, com acesso sem JS.
+
+### Verificações executadas
+
+- Chromium em 360 (escuro)/768/1440 px, movimento reduzido: valores apresentados nos oito períodos confrontados com o JSON calculado; média, máximo e cobertura conferem. 2020/2026 mostram aviso de ano parcial.
+- Nova Iorque na vista OpenWeather: sem histórico, sem reutilização de 7,07 da OMS. Troca para OMS apresenta a média e fonte correctas; Luanda na OMS informa ausência de valor. Voltar a OpenWeather restaura os indicadores de Luanda.
+- Troca de fonte por teclado, selecção de marcadores por Enter, foco em Luanda, vista global e lista de cidades: passaram. Sem erros JS, sem pedidos de rede externos e sem overflow horizontal da página.
+- Verificação interna dos contentores de fontes, cabeçalho e estatísticas em 320/650/768/1024/1440: scrollWidth não excede clientWidth; números e controlos não ficam cortados.
+- Sem JS em 360 px: indicadores de Luanda legíveis, tabela OpenWeather de oito períodos e tabela OMS de vinte cidades acessíveis por details.
+- Capturas inspeccionadas: indicadores em 360 escuro e mapa/selectores em 1440 claro. Não houve inspecção visual de todas as combinações e períodos.
+- Sintaxe de `world-map.js`, parser de IDs/âncoras/ficheiros locais e `git diff --check`: passaram. Sem alteração aos CSV originais, dados OMS, vídeo ou aplicação.
+
+### Limites
+
+Não foram recolhidos históricos OpenWeather de outras cidades, autenticada a origem física, medido desempenho preditivo ou validada representatividade por sensores de Luanda. A API oficial foi consultada como documentação, sem pedidos autenticados. Revisão por leitor de ecrã, outros navegadores e teste com utilizadores continuam pendentes. Não houve commit, push ou publicação.

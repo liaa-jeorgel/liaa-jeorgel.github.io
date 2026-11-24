@@ -1,158 +1,177 @@
 WEBVTT
 
-00:00:00.000 --> 00:00:03.852
-Em Luanda, o ar faz parte da vida de todos os dias.
+00:00:00.000 --> 00:00:04.359 line:84% position:50% align:center
+Em Luanda, o projecto estuda o PM dois ponto
+cinco:
 
-00:00:04.132 --> 00:00:06.806
-Trânsito, poeira e condições atmosféricas são
+00:00:04.359 --> 00:00:07.845 line:84% position:50% align:center
+partículas finas com até dois vírgula cinco
+micrómetros.
 
-00:00:06.806 --> 00:00:09.925
-motivos para observar a qualidade do ar.
+00:00:08.125 --> 00:00:12.802 line:84% position:50% align:center
+A pergunta é simples: usando o passado,
+conseguimos antecipar a
 
-00:00:10.205 --> 00:00:12.789
-A pergunta de Jeorgel Chitende é:
+00:00:12.802 --> 00:00:16.076 line:84% position:50% align:center
+concentração uma, três ou seis horas depois?
 
-00:00:12.789 --> 00:00:15.803
-podemos antecipar o material particulado fino com
+00:00:16.776 --> 00:00:20.929 line:84% position:50% align:center
+O mapa do site situa Luanda num contexto global.
+As
 
-00:00:15.803 --> 00:00:18.818
-uma, três ou seis horas de antecedência?
+00:00:20.929 --> 00:00:24.251 line:84% position:50% align:center
+linhas são ilustrativas, não mostram movimentos
+do ar.
 
-00:00:19.518 --> 00:00:24.309
-A base global da OMS reúne medições de PM 2,5
+00:00:24.531 --> 00:00:29.173 line:84% position:50% align:center
+Nesta base da OMS não há um valor para Luanda.
 
-00:00:24.309 --> 00:00:26.226
-comunicadas por muitos países.
+00:00:29.173 --> 00:00:33.816 line:84% position:50% align:center
+O estudo usa ficheiros atribuídos à OpenWeather,
+não medições locais
 
-00:00:26.506 --> 00:00:28.984
-Angola não tem registos nessa base;
+00:00:33.816 --> 00:00:34.280 line:84% position:50% align:center
+certificadas.
 
-00:00:28.984 --> 00:00:32.702
-Luanda não recebe aqui um valor oficial da OMS.
+00:00:34.980 --> 00:00:39.384 line:84% position:50% align:center
+Uma fonte traz a concentração de PM dois ponto
+cinco.
 
-00:00:32.982 --> 00:00:36.440
-O mapa do site liga cidades de forma esquemática:
+00:00:39.384 --> 00:00:42.908 line:84% position:50% align:center
+A outra traz temperatura, humidade, pressão e
+vento.
 
-00:00:36.440 --> 00:00:39.899
-não é um ranking nem uma comparação entre países.
+00:00:43.188 --> 00:00:47.152 line:84% position:50% align:center
+A integração compara timestamps exactos em UTC.
+Estar na mesma
 
-00:00:39.949 --> 00:00:44.437
-O estudo reúne duas fontes atribuídas à OpenWeather:
+00:00:47.152 --> 00:00:50.720 line:84% position:50% align:center
+hora não prova que uma variável cause a outra.
 
-00:00:44.437 --> 00:00:48.364
-concentrações de PM 2,5 e dados meteorológicos.
+00:00:51.420 --> 00:00:55.737 line:84% position:50% align:center
+A curva mostra as médias diárias das
+concentrações disponíveis. Há
 
-00:00:48.644 --> 00:00:51.504
-A meteorologia inclui temperatura, humidade, pressão
+00:00:55.737 --> 00:01:00.054 line:84% position:50% align:center
+quarenta e nove mil oitocentas e noventa e seis
+observações
 
-00:00:51.504 --> 00:00:55.794
-ao nível do mar, velocidade e direcção do vento.
+00:01:00.054 --> 00:01:00.485 line:84% position:50% align:center
+horárias.
 
-00:00:56.074 --> 00:01:00.006
-A conferência dos ficheiros verifica valores e
-transformações;
+00:01:00.765 --> 00:01:04.546 line:84% position:50% align:center
+A cobertura é de noventa e oito vírgula zero
+dois
 
-00:01:00.006 --> 00:01:04.431
-não autentica a origem física nem substitui sensores
-locais.
+00:01:04.546 --> 00:01:08.326 line:84% position:50% align:center
+por cento. A média diária pode atenuar picos;
+não houve
 
-00:01:04.481 --> 00:01:08.225
-Este é o histórico real fornecido para o site,
-
-00:01:08.225 --> 00:01:09.888
-mostrado por médias diárias.
-
-00:01:10.168 --> 00:01:13.168
-A cobertura observacional é de noventa e oito
-
-00:01:13.168 --> 00:01:15.042
-vírgula zero dois por cento.
-
-00:01:15.322 --> 00:01:19.164
-As médias diárias facilitam a leitura, mas podem
-
-00:01:19.164 --> 00:01:23.006
-atenuar picos horários. Não houve suavização nem
+00:01:08.326 --> 00:01:08.704 line:84% position:50% align:center
 interpolação.
 
-00:01:23.056 --> 00:01:27.581
-Há mil e oito horas ausentes, distribuídas por
-trinta episódios.
+00:01:09.404 --> 00:01:13.402 line:84% position:50% align:center
+As mil e oito horas ausentes aparecem como
+ausências. Criar
 
-00:01:27.861 --> 00:01:31.288
-A maior ausência dura cento e vinte horas. Entre as
+00:01:13.402 --> 00:01:16.600 line:84% position:50% align:center
+a posição da hora não cria uma concentração.
 
-00:01:31.288 --> 00:01:35.057
-observações que a delimitam decorrem cento e vinte e
-uma horas.
+00:01:16.880 --> 00:01:20.070 line:84% position:50% align:center
+A maior lacuna tem cento e vinte horas sem
+observação:
 
-00:01:35.337 --> 00:01:39.805
-A preparação conserva essas posições sem inventar
-concentrações.
+00:01:20.070 --> 00:01:23.259 line:84% position:50% align:center
+são cento e vinte e uma horas entre os registos
 
-00:01:39.855 --> 00:01:42.379
-A aplicação organiza o percurso:
+00:01:23.259 --> 00:01:24.215 line:84% position:50% align:center
+que a delimitam.
 
-00:01:42.379 --> 00:01:46.923
-importar, diagnosticar, alinhar as horas e construir
-os atributos.
+00:01:24.915 --> 00:01:30.667 line:84% position:50% align:center
+Primeiro, conferir timestamps, unidades e
+duplicações. Depois, alinhar as fontes
 
-00:01:47.203 --> 00:01:52.738
-No site, as explicações completas continuam
-disponíveis numa página de método.
+00:01:30.667 --> 00:01:32.392 line:84% position:50% align:center
+numa grade horária.
 
-00:01:52.788 --> 00:01:57.943
-Para cada instante de origem, as entradas usam
-apenas observações anteriores.
+00:01:32.672 --> 00:01:37.321 line:84% position:50% align:center
+Os valores de concentração são preservados. A
+ilustração explica o
 
-00:01:58.223 --> 00:02:01.865
-O alvo é a concentração observada exactamente uma,
+00:01:37.321 --> 00:01:41.505 line:84% position:50% align:center
+processo; não é uma gravação da aplicação em
+execução.
 
-00:02:01.865 --> 00:02:04.142
-três ou seis horas depois.
+00:01:42.205 --> 00:01:46.399 line:84% position:50% align:center
+No instante t, os atributos usam apenas o
+passado: por
 
-00:02:04.422 --> 00:02:07.949
-Neste exemplo real, as três marcações são alvos
+00:01:46.399 --> 00:01:50.593 line:84% position:50% align:center
+exemplo, valores de uma, três, seis ou vinte e
+quatro
 
-00:02:07.949 --> 00:02:10.595
-históricos, não resultados de um modelo.
+00:01:50.593 --> 00:01:51.432 line:84% position:50% align:center
+horas antes.
 
-00:02:10.645 --> 00:02:13.851
-Os ficheiros contêm trinta e nove atributos por
+00:01:51.712 --> 00:01:55.875 line:84% position:50% align:center
+As médias móveis também terminam antes de t. A
+hipótese
 
-00:02:13.851 --> 00:02:16.657
-horizonte, com desfasamentos e médias do passado.
+00:01:55.875 --> 00:02:00.037 line:84% position:50% align:center
+retrospectiva de disponibilidade de uma hora não
+é uma latência
 
-00:02:16.937 --> 00:02:20.232
-A conferência independente comparou alvos, atributos
+00:02:00.037 --> 00:02:00.870 line:84% position:50% align:center
+operacional comprovada.
 
-00:02:20.232 --> 00:02:25.723
-e elegibilidade com os dados fornecidos, sem
-divergências nessas verificações.
+00:02:01.570 --> 00:02:05.154 line:84% position:50% align:center
+Neste exemplo, a origem é o meio dia de dois
 
-00:02:25.773 --> 00:02:29.558
-Preparar os dados ainda não responde à pergunta da
-previsão.
+00:02:05.154 --> 00:02:08.739 line:84% position:50% align:center
+de dezembro de dois mil e vinte. As marcações
+mostram
 
-00:02:29.838 --> 00:02:33.965
-A próxima fase é executar a persistência, que repete
+00:02:08.739 --> 00:02:10.890 line:84% position:50% align:center
+uma, três e seis horas depois.
 
-00:02:33.965 --> 00:02:39.008
-a última concentração disponível, e depois treinar
-Random Forest e LSTM.
+00:02:11.170 --> 00:02:16.414 line:84% position:50% align:center
+Esses pontos são concentrações históricas
+observadas, usadas como alvos. Não
 
-00:02:39.288 --> 00:02:42.302
-A comparação deverá respeitar a ordem temporal e
+00:02:16.414 --> 00:02:19.561 line:84% position:50% align:center
+são previsões produzidas por um modelo.
 
-00:02:42.302 --> 00:02:45.693
-usar os mesmos períodos de teste por horizonte, com
+00:02:20.261 --> 00:02:24.755 line:84% position:50% align:center
+Uma amostra exige histórico completo e alvo
+disponível. Os três
 
-00:02:45.693 --> 00:02:49.085
-erro absoluto médio e raiz do erro quadrático médio.
+00:02:24.755 --> 00:02:29.248 line:84% position:50% align:center
+ficheiros têm trinta e nove atributos, mas
+quantidades diferentes de
 
-00:02:49.365 --> 00:02:52.456
-Ainda não há resultados preditivos. Explore os
+00:02:29.248 --> 00:02:29.698 line:84% position:50% align:center
+amostras.
 
-00:02:52.456 --> 00:02:57.315
-dados, consulte as limitações e acompanhe a próxima
-etapa no site.
+00:02:29.978 --> 00:02:34.185 line:84% position:50% align:center
+As contagens não se somam. A conferência dos CSV
+verificou
+
+00:02:34.185 --> 00:02:38.393 line:84% position:50% align:center
+alvos e atributos; não autentica a origem física
+da fonte.
+
+00:02:39.093 --> 00:02:43.716 line:84% position:50% align:center
+A próxima etapa é usar a persistência como
+referência e
+
+00:02:43.716 --> 00:02:47.415 line:84% position:50% align:center
+treinar Random Forest e LSTM, com separação
+cronológica.
+
+00:02:47.695 --> 00:02:52.747 line:84% position:50% align:center
+Depois, comparar os erros nos mesmos períodos
+por horizonte. Dados
+
+00:02:52.747 --> 00:02:57.294 line:84% position:50% align:center
+preparados não são previsões: ainda não existem
+resultados preditivos.

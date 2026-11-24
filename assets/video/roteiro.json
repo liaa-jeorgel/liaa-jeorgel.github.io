@@ -1,91 +1,92 @@
 [
   {
-    "title": "O ar que nem sempre vemos",
-    "kicker": "LUANDA · UMA PERGUNTA DE INVESTIGAÇÃO",
+    "title": "O que estamos a tentar antecipar?",
+    "kicker": "LUANDA · QUALIDADE DO AR",
     "kind": "city",
     "lines": [
-      "Em Luanda, o ar faz parte da vida de todos os dias.",
-      "Trânsito, poeira e condições atmosféricas são motivos para observar a qualidade do ar.",
-      "A pergunta de Jeorgel Chitende é: podemos antecipar o material particulado fino com uma, três ou seis horas de antecedência?"
+      "Em Luanda, o projecto estuda o PM dois ponto cinco: partículas finas com até dois vírgula cinco micrómetros.",
+      "A pergunta é simples: usando o passado, conseguimos antecipar a concentração uma, três ou seis horas depois?"
     ]
   },
   {
-    "title": "Contexto global, com cautela",
-    "kicker": "BASE DA OMS · V8.0, 2026",
+    "title": "O contexto não é uma comparação",
+    "kicker": "MAPA GLOBAL · OMS V8.0",
     "kind": "world",
     "lines": [
-      "A base global da OMS reúne medições de PM 2,5 comunicadas por muitos países.",
-      "Angola não tem registos nessa base; Luanda não recebe aqui um valor oficial da OMS.",
-      "O mapa do site liga cidades de forma esquemática: não é um ranking nem uma comparação entre países."
+      "O mapa do site situa Luanda num contexto global. As linhas são ilustrativas, não mostram movimentos do ar.",
+      "Nesta base da OMS não há um valor para Luanda. O estudo usa ficheiros atribuídos à OpenWeather, não medições locais certificadas."
     ]
   },
   {
-    "title": "Dois históricos, um percurso",
-    "kicker": "DADOS FORNECIDOS PELO INVESTIGADOR",
+    "title": "Duas fontes, a mesma hora",
+    "kicker": "PM2.5 E METEOROLOGIA",
     "kind": "sources",
     "lines": [
-      "O estudo reúne duas fontes atribuídas à OpenWeather: concentrações de PM 2,5 e dados meteorológicos.",
-      "A meteorologia inclui temperatura, humidade, pressão ao nível do mar, velocidade e direcção do vento.",
-      "A conferência dos ficheiros verifica valores e transformações; não autentica a origem física nem substitui sensores locais."
+      "Uma fonte traz a concentração de PM dois ponto cinco. A outra traz temperatura, humidade, pressão e vento.",
+      "A integração compara timestamps exactos em UTC. Estar na mesma hora não prova que uma variável cause a outra."
     ]
   },
   {
-    "title": "49.896 observações preservadas",
-    "kicker": "DEZEMBRO DE 2020 A SETEMBRO DE 2026 · UTC",
+    "title": "Veja a série, não apenas os números",
+    "kicker": "HISTÓRICO FORNECIDO · 2020 A 2026",
     "kind": "series",
     "lines": [
-      "Este é o histórico real fornecido para o site, mostrado por médias diárias.",
-      "A cobertura observacional é de noventa e oito vírgula zero dois por cento.",
-      "As médias diárias facilitam a leitura, mas podem atenuar picos horários. Não houve suavização nem interpolação."
+      "A curva mostra as médias diárias das concentrações disponíveis. Há quarenta e nove mil oitocentas e noventa e seis observações horárias.",
+      "A cobertura é de noventa e oito vírgula zero dois por cento. A média diária pode atenuar picos; não houve interpolação."
     ]
   },
   {
-    "title": "Ausência não é zero",
-    "kicker": "1.008 HORAS AUSENTES · 30 EPISÓDIOS",
+    "title": "Uma lacuna não vale zero",
+    "kicker": "PREPARAÇÃO CONSERVADORA",
     "kind": "gaps",
     "lines": [
-      "Há mil e oito horas ausentes, distribuídas por trinta episódios.",
-      "A maior ausência dura cento e vinte horas. Entre as observações que a delimitam decorrem cento e vinte e uma horas.",
-      "A preparação conserva essas posições sem inventar concentrações."
+      "As mil e oito horas ausentes aparecem como ausências. Criar a posição da hora não cria uma concentração.",
+      "A maior lacuna tem cento e vinte horas sem observação: são cento e vinte e uma horas entre os registos que a delimitam."
     ]
   },
   {
-    "title": "Preparação transparente",
-    "kicker": "OPERAÇÕES DA MESMA APLICAÇÃO",
+    "title": "O que a preparação transforma?",
+    "kicker": "OPERAÇÕES DE UMA ÚNICA APLICAÇÃO",
     "kind": "pipeline",
     "lines": [
-      "A aplicação organiza o percurso: importar, diagnosticar, alinhar as horas e construir os atributos.",
-      "No site, as explicações completas continuam disponíveis numa página de método."
+      "Primeiro, conferir timestamps, unidades e duplicações. Depois, alinhar as fontes numa grade horária.",
+      "Os valores de concentração são preservados. A ilustração explica o processo; não é uma gravação da aplicação em execução."
     ]
   },
   {
-    "title": "Uma origem, três alvos",
-    "kicker": "OBSERVAÇÕES HISTÓRICAS · NÃO SÃO PREVISÕES",
+    "title": "As entradas olham apenas para trás",
+    "kicker": "UM EXEMPLO REAL DO CSV",
+    "kind": "features",
+    "lines": [
+      "No instante t, os atributos usam apenas o passado: por exemplo, valores de uma, três, seis ou vinte e quatro horas antes.",
+      "As médias móveis também terminam antes de t. A hipótese retrospectiva de disponibilidade de uma hora não é uma latência operacional comprovada."
+    ]
+  },
+  {
+    "title": "Depois de t estão os alvos",
+    "kicker": "TRÊS OBSERVAÇÕES FUTURAS NO HISTÓRICO",
     "kind": "horizons",
     "lines": [
-      "Para cada instante de origem, as entradas usam apenas observações anteriores.",
-      "O alvo é a concentração observada exactamente uma, três ou seis horas depois.",
-      "Neste exemplo real, as três marcações são alvos históricos, não resultados de um modelo."
+      "Neste exemplo, a origem é o meio dia de dois de dezembro de dois mil e vinte. As marcações mostram uma, três e seis horas depois.",
+      "Esses pontos são concentrações históricas observadas, usadas como alvos. Não são previsões produzidas por um modelo."
     ]
   },
   {
-    "title": "39 atributos por horizonte",
+    "title": "Nem toda hora forma uma amostra",
     "kicker": "TRÊS CONJUNTOS INDEPENDENTES",
     "kind": "samples",
     "lines": [
-      "Os ficheiros contêm trinta e nove atributos por horizonte, com desfasamentos e médias do passado.",
-      "A conferência independente comparou alvos, atributos e elegibilidade com os dados fornecidos, sem divergências nessas verificações."
+      "Uma amostra exige histórico completo e alvo disponível. Os três ficheiros têm trinta e nove atributos, mas quantidades diferentes de amostras.",
+      "As contagens não se somam. A conferência dos CSV verificou alvos e atributos; não autentica a origem física da fonte."
     ]
   },
   {
-    "title": "O que falta responder?",
+    "title": "A comparação ainda está por fazer",
     "kicker": "PERSISTÊNCIA · RANDOM FOREST · LSTM",
     "kind": "future",
     "lines": [
-      "Preparar os dados ainda não responde à pergunta da previsão.",
-      "A próxima fase é executar a persistência, que repete a última concentração disponível, e depois treinar Random Forest e LSTM.",
-      "A comparação deverá respeitar a ordem temporal e usar os mesmos períodos de teste por horizonte, com erro absoluto médio e raiz do erro quadrático médio.",
-      "Ainda não há resultados preditivos. Explore os dados, consulte as limitações e acompanhe a próxima etapa no site."
+      "A próxima etapa é usar a persistência como referência e treinar Random Forest e LSTM, com separação cronológica.",
+      "Depois, comparar os erros nos mesmos períodos por horizonte. Dados preparados não são previsões: ainda não existem resultados preditivos."
     ]
   }
 ]
