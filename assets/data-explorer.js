@@ -56,6 +56,7 @@ if (seriesPeriod) {
     cursor.style.setProperty('--point-y', row.mean === null ? '100%' : `${(ceiling-row.mean)/ceiling*100}%`);
     cursor.classList.toggle('is-missing', row.mean === null);
     if (announce) document.querySelector('#concentration-day-announcement').textContent = `${date(row.date)}: ${value}.`;
+    image.dispatchEvent(new CustomEvent('chart:reading',{detail:{date:row.date,value,coverage:`${row.observed} de ${row.grid} horas observadas · ${row.missing} ausentes`}}));
   }
   function updatePeriod() {
     selected = daily.filter(row => seriesPeriod.value === 'todos' || row.date.startsWith(seriesPeriod.value));
@@ -83,7 +84,7 @@ if (seriesPeriod) {
   }).then(csv => {
     daily = csv.trim().split(/\r?\n/).slice(1).map(line => {
       const cells = line.split(',');
-      return {date:cells[0],mean:cells[1] === '' ? null : Number(cells[1]),max:cells[3] === '' ? null : Number(cells[3]),observed:Number(cells[4]),grid:Number(cells[5]),missing:Number(cells[6])};
+      return {date:cells[0],mean:cells[1] === '' ? null : Number(cells[1]),max:cells[3] === '' ? null : Number(cells[3]),observed:Number(cells[4]),grid:Number(cells[5]),missing:Number(cells[6]),temperature:cells[7] === '' ? null : Number(cells[7]),humidity:cells[8] === '' ? null : Number(cells[8]),wind:cells[9] === '' ? null : Number(cells[9])};
     });
     if (!daily.length || daily.some(r => !/^\d{4}-\d{2}-\d{2}$/.test(r.date) || (r.mean !== null && !Number.isFinite(r.mean)) || !Number.isFinite(r.grid))) throw new Error('Formato não reconhecido');
     seriesPeriod.dataset.dailyReady = 'true';
@@ -94,16 +95,49 @@ if (seriesPeriod) {
     image.addEventListener('load', () => showDay(Number(slider.value)));
     slider.addEventListener('input', () => showDay(Number(slider.value)));
     slider.addEventListener('change', () => showDay(Number(slider.value), true));
+    // Mesmo leitor para rato, toque e teclado. O hover é limitado a um frame.
+    const canvas = image.closest('.concentration-canvas');
+    const tip = document.createElement('div');tip.className='chart-tooltip';tip.hidden=true;tip.setAttribute('role','tooltip');tip.id='concentration-hover-value';
+    for (const tag of ['span','strong','small']) tip.append(document.createElement(tag));
+    canvas.append(tip);
+    let reading = null, dismissed = false, hoverFrame = null, pendingPointer = null;
+    function placeTip(clientX,clientY) {
+      const bounds=canvas.getBoundingClientRect();
+      tip.style.left=`${Math.max(8,Math.min(bounds.width-tip.offsetWidth-8,clientX-bounds.left+18))}px`;
+      tip.style.top=`${Math.max(8,Math.min(bounds.height-tip.offsetHeight-8,clientY-bounds.top-tip.offsetHeight-15))}px`;
+    }
+    image.addEventListener('chart:reading',event => {
+      reading=event.detail;
+      tip.querySelector('span').textContent=date(reading.date)+' · média diária';
+      tip.querySelector('strong').textContent=reading.value;
+      tip.querySelector('small').textContent=reading.coverage;
+    });
+    function readPointer(event,announce=false) {
+      const bounds=image.getBoundingClientRect(), overview=image.currentSrc.includes('-mobile.svg');
+      const position=overview?((event.clientX-bounds.left)/bounds.width*480-44)/420:((event.clientX-bounds.left)/bounds.width*1000-64)/912;
+      showDay(Math.max(0,Math.min(selected.length-1,Math.floor(position*selected.length))),announce);
+      if (!dismissed && reading) {tip.hidden=false;placeTip(event.clientX,event.clientY);}
+    }
+    image.addEventListener('pointermove',event => {
+      if (event.pointerType!=='mouse' || event.buttons) return;
+      pendingPointer={clientX:event.clientX,clientY:event.clientY};
+      if (hoverFrame===null) hoverFrame=requestAnimationFrame(() => {hoverFrame=null;if(pendingPointer)readPointer(pendingPointer);});
+    });
+    canvas.addEventListener('pointerleave',() => {tip.hidden=true;dismissed=false;pendingPointer=null;if(hoverFrame!==null)cancelAnimationFrame(hoverFrame);hoverFrame=null;});
+    document.addEventListener('keydown',event => {if(event.key==='Escape'&&!tip.hidden){tip.hidden=true;dismissed=true;}});
+    image.addEventListener('load',()=>{tip.hidden=true;});
+    const hint=document.createElement('p');hint.className='chart-interaction-hint';hint.textContent='Passe o rato para ler os valores; toque no gráfico ou use o controlo de dias.';
+    canvas.closest('.data-chart-scroll').before(hint);
+    // Partilha os dados já carregados; não duplica a consulta do CSV.
+    document.dispatchEvent(new CustomEvent('pm25:daily-ready',{detail:daily}));
+    window.pm25DailyRows=daily;
     let pointerStart = null;
     image.addEventListener('pointerdown', event => { pointerStart = {x:event.clientX,y:event.clientY}; });
     image.addEventListener('pointerup', event => {
       if (event.button !== 0 || !pointerStart) return;
       const start = pointerStart; pointerStart = null;
       if (Math.hypot(event.clientX-start.x,event.clientY-start.y) > 10) return;
-      const bounds = image.getBoundingClientRect();
-      const overview = image.currentSrc.includes('-mobile.svg');
-      const position = overview ? ((event.clientX-bounds.left)/bounds.width*480-44)/420 : ((event.clientX-bounds.left)/bounds.width*1000-64)/912;
-      showDay(Math.max(0,Math.min(selected.length-1,Math.floor(position*selected.length))), true);
+      dismissed=false;readPointer(event,true);
     });
     image.addEventListener('pointercancel', () => {pointerStart = null;});
   }).catch(() => {

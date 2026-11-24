@@ -27,8 +27,9 @@
   const meta = readout.querySelector('span');
   const note = readout.querySelector('p');
   let selected = null;
-  let source = 'openweather';
-  const statistics = JSON.parse(figure.querySelector('#pm-luanda-statistics-data').textContent);
+  const statisticsElement = figure.querySelector('#pm-luanda-statistics-data');
+  const statistics = statisticsElement ? JSON.parse(statisticsElement.textContent) : null;
+  let source = statistics ? 'openweather' : 'who';
   const period = figure.querySelector('#pm-map-year');
   const luandaData = figure.querySelector('#pm-luanda-data');
   const sourceNote = figure.querySelector('#pm-map-source-note');
@@ -38,9 +39,12 @@
     const date = new Date(value);
     return new Intl.DateTimeFormat('pt-PT',{timeZone:'UTC',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',hour12:false}).format(date);
   };
-  figure.querySelector('.pm-map-source-controls').hidden = false;
-  figure.querySelector('.pm-map-year-control').hidden = false;
+  const sourceControls = figure.querySelector('.pm-map-source-controls');
+  const yearControl = figure.querySelector('.pm-map-year-control');
+  if (sourceControls) sourceControls.hidden = false;
+  if (yearControl) yearControl.hidden = false;
   function updateStatistics() {
+    if (!statistics || !period) return;
     const entry = statistics.periods[period.value];
     if (!entry) return;
     function value(id,number,unit) {
@@ -56,7 +60,7 @@
   }
   function refreshLabels() {
     figure.dataset.source = source;
-    sourceNote.textContent = source === 'openweather'
+    if (sourceNote) sourceNote.textContent = source === 'openweather'
       ? 'OpenWeather · histórico fornecido para Luanda. Outras cidades: sem histórico desta fonte neste site.'
       : 'OMS V8.0 · valores comunicados em anos diferentes. Não são comparáveis directamente com o histórico OpenWeather de Luanda.';
     chips.forEach(chip => {
@@ -89,7 +93,7 @@
     for (const chip of chips) chip.setAttribute('aria-pressed', String(chip.dataset.city === id));
 
     title.textContent = `${city.name}, ${city.country}`;
-    luandaData.hidden = !(source === 'openweather' && city.focus);
+    if (luandaData) luandaData.hidden = !(source === 'openweather' && city.focus);
     if (source === 'openweather') {
       const entry = statistics.periods[period.value];
       meta.textContent = city.focus ? `OpenWeather · média do período: ${formatter.format(entry.mean_ug_m3)} µg/m³` : 'OpenWeather · sem histórico disponível neste site';
@@ -170,7 +174,7 @@
     refreshLabels();
     const id = selected || 'luanda';selected = null;select(id);
   }));
-  period.addEventListener('change',() => {
+  period?.addEventListener('change',() => {
     updateStatistics();refreshLabels();
     const id = selected || 'luanda';selected = null;select(id);
   });

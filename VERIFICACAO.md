@@ -472,3 +472,19 @@ Vista padrão OpenWeather com Luanda, select por período, média/máximo/cobert
 ### Limites
 
 Não foram recolhidos históricos OpenWeather de outras cidades, autenticada a origem física, medido desempenho preditivo ou validada representatividade por sensores de Luanda. A API oficial foi consultada como documentação, sem pedidos autenticados. Revisão por leitor de ecrã, outros navegadores e teste com utilizadores continuam pendentes. Não houve commit, push ou publicação.
+
+## Rodapé partilhado — 24/11/2026
+
+Rodapé actualizado no índice, método e página educativa, com identidade académica, navegação, materiais, acesso à aplicação e regresso ao início. Mantidas a paleta e a tipografia existentes; sem dependências novas ou contactos inventados.
+
+Chromium: nove cenários (três páginas × 320/768/1440 px, 320 em escuro), movimento reduzido. Links recebem foco por teclado, regresso ao início aponta para a âncora correcta, atalho de vídeo no índice funciona, aplicação usa nova aba com noopener/noreferrer. Sem overflow horizontal da página ou erros JS. Texto final fica acima do acesso flutuante. Sem JS a 360 px: âncora nativa para materiais funcional. Inspeccionadas capturas do rodapé do índice em 1440 claro e 320 escuro. Parser valida IDs e destinos locais das três páginas; sintaxe JS e diff verificados.
+
+A verificação detectou incompatibilidade anterior do script de mapa partilhado com a versão OMS da página de método (ausência do bloco JSON de estatísticas OpenWeather). A inicialização foi protegida e mantém essa página em vista OMS, sem inventar estatísticas nem remover controlos. Testes nas três páginas repetidos e passaram. Não foram executados leitor de ecrã ou testes noutros navegadores nesta revisão. Sem publicação.
+
+## Feedback de exploração — 24/11/2026
+
+Implementados leitores de valores por rato/toque nos três gráficos, indicadores de posição, controlos nativos e realces discretos em cartões. Dados provenientes dos CSV existentes, sem alteração de conteúdos científicos.
+
+Executado em Chromium: 360 px escuro e 1440 px claro, movimento reduzido; hover dos três gráficos, lacuna de PM2.5 de 31/03/2025 sem valor zero, Escape e reabertura, temperatura inicial de 27,20 °C, setas/Home/End, alvo histórico de +1 h de 10,49 µg/m³. Toque em 360 px confirmou alvo de +3 h de 8,75 µg/m³. Sem erros JS ou overflow horizontal nos cenários. Sem JS em 360 px, os três painéis e os gráficos permanecem acessíveis. Capturas inspeccionadas: concentração em 360 escuro e temperatura em 1440 claro. Sintaxe JS, IDs/destinos locais e diff verificados.
+
+Pendentes: leitores de ecrã, Safari/Firefox, dispositivos físicos e testes com utilizadores. Não foi executada medição formal de desempenho; eventos de movimento são agrupados com requestAnimationFrame. Sem publicação.

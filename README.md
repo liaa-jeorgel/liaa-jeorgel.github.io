@@ -439,3 +439,11 @@ Resultado público: `assets/data/luanda-map-statistics.json`, também incorporad
 A OMS V8.0 permanece numa vista alternativa explícita. Valores OMS de outras cidades não são reutilizados na vista OpenWeather. Nessa vista, só Luanda tem histórico disponível; outros pontos são referências geográficas com informação de indisponibilidade do histórico no site, sem afirmar inexistência de medição ou poluição. Para preencher outras cidades com a mesma fonte, é necessário obter e conferir os históricos correspondentes, com períodos e coordenadas definidos. Nenhuma chave foi solicitada, armazenada ou exposta; o mapa não chama a API.
 
 Na vista OMS, Luanda continua sem valor comunicado na base consultada. As duas fontes têm tabelas textuais separadas e continuam legíveis sem JavaScript. Não se criam rankings, comparações directas entre fontes, categorias de risco ou certificação de representatividade local. Documentação oficial consultada: OpenWeather Air Pollution API e History Bulk; o histórico PM2.5 do mapa usa exclusivamente o CSV de poluição preparado, não o produto meteorológico como substituto de concentração.
+
+### Rodapé comum
+
+As três páginas partilham um rodapé com identidade académica, autor/instituição, atalhos para os dados/evolução/vídeo, página educativa, método, manifesto e repositório. O acesso à aplicação abre numa nova aba, indicado no texto. O regresso ao início respeita a página corrente. Layout em três colunas no computador e empilhado no telemóvel; espaço inferior reservado ao botão flutuante. Não foram acrescentados contactos, redes sociais ou licenças não fornecidos.
+
+### Exploração interactiva dos gráficos
+
+Os gráficos de concentração, temperatura e horizontes mostram valores dos CSV ao passar o rato ou tocar. Os controlos nativos permitem percorrer dias/horas por teclado; temperatura e horizontes também aceitam setas, Home e End no gráfico focado. Escape fecha a indicação. Lacunas não são convertidas em zero, e os alvos históricos não são apresentados como previsões. O feedback do ponteiro é limitado a um ciclo de animação; o CSV diário é partilhado entre os leitores. Sem JavaScript, os SVG e explicações permanecem disponíveis. Realces discretos nos cartões respeitam movimento reduzido.
