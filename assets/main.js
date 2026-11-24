@@ -38,7 +38,7 @@ function enterPanel(panel) {
   if (motionPaused || reducedMotion.matches) return;
   const candidates = panel.id === 'inicio'
     ? panel.querySelectorAll('.research-kicker, h1, .hero-copy, .current-stage, .actions, .hero-figure, .hero-foot')
-    : panel.querySelectorAll('.section-heading, .question, .context-grid, .model-grid, .process-note, .journal-intro, .result-stats, .related-card, .author-grid');
+    : panel.querySelectorAll('.section-heading, .question, .context-grid, .process-note, .journal-intro, .result-stats, .related-card, .author-grid');
   [...candidates].slice(0, 8).forEach((item, index) => {
     item.getAnimations().forEach(animation => animation.cancel());
     item.animate([{ opacity: .15, transform: 'translateY(16px)' }, { opacity: 1, transform: 'translateY(0)' }], {
@@ -202,7 +202,8 @@ window.addEventListener('scroll', () => {
 updateOffset();
 updateCurrentSection();
 enterPanel(panels[0]);
-if (location.hash) showDestination(location.hash);
+// A navegação inicial aguarda a definição dos controlos de detalhe.
+requestAnimationFrame(() => { if (location.hash) showDestination(location.hash); });
 
 
 /* Mapa comparativo: seleccionar uma coluna sem esconder a visão de conjunto. */

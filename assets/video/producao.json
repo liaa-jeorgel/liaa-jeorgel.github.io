@@ -1,0 +1,72 @@
+{
+  "duration_seconds": 177.365,
+  "voice": "Joana — macOS, síntese de voz",
+  "speech_rate_wpm": 156,
+  "pause_between_lines_seconds": 0.28,
+  "crossfade_seconds": 0.65,
+  "resolution": "1280x720",
+  "frame_rate": 24,
+  "captions": {
+    "language": "pt",
+    "cues": 48,
+    "alignment": "repartidas proporcionalmente dentro da fala detetada em cada frase"
+  },
+  "scenes": [
+    {
+      "scene": 1,
+      "start": 0.0,
+      "duration": 19.518,
+      "title": "O ar que nem sempre vemos"
+    },
+    {
+      "scene": 2,
+      "start": 19.518,
+      "duration": 21.082,
+      "title": "Contexto global, com cautela"
+    },
+    {
+      "scene": 3,
+      "start": 39.949,
+      "duration": 25.182,
+      "title": "Dois históricos, um percurso"
+    },
+    {
+      "scene": 4,
+      "start": 64.481,
+      "duration": 19.225,
+      "title": "49.896 observações preservadas"
+    },
+    {
+      "scene": 5,
+      "start": 83.056,
+      "duration": 17.449,
+      "title": "Ausência não é zero"
+    },
+    {
+      "scene": 6,
+      "start": 99.855,
+      "duration": 13.583,
+      "title": "Preparação transparente"
+    },
+    {
+      "scene": 7,
+      "start": 112.788,
+      "duration": 18.507,
+      "title": "Uma origem, três alvos"
+    },
+    {
+      "scene": 8,
+      "start": 130.645,
+      "duration": 15.779,
+      "title": "39 atributos por horizonte"
+    },
+    {
+      "scene": 9,
+      "start": 145.773,
+      "duration": 32.242,
+      "title": "O que falta responder?"
+    }
+  ],
+  "data": "assets/data/audit.json",
+  "nature": "Apresentação dos dados fornecidos; não é gravação de execução nem previsão."
+}

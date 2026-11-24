@@ -256,3 +256,123 @@ Adicionado acesso “Abrir aplicação” na página principal e na página educ
 ### Refinamento visual do acesso à aplicação
 
 Texto alterado para “Explorar dados de PM2.5”, com indicação visível “Abrir aplicação · nova aba”. Ícone SVG conceptual com partículas e traçado de sinal; não representa uma medição em tempo real. As animações de entrada terminam em menos de cinco segundos, o foco/hover realça o sinal, e a regra de movimento reduzido desactiva os efeitos. O controlo geral de pausa do site também se aplica às animações CSS. Repetidas as verificações locais em 320/1440 px, nas duas páginas: destino preservado, foco acessível, botão dentro do ecrã no início/fim, sem scroll horizontal. Captura de 320 px inspeccionada. Sem publicação.
+
+## Melhoria orientada às recomendações do professor — 24/11/2026
+
+### Dados conferidos nesta entrega
+
+Foram lidos os cinco CSV indicados pelo autor, sem modificar os insumos ou a aplicação:
+
+- PM2.5: 50.904 posições horárias únicas e consecutivas, 49.896 valores observados, 1.008 ausências, cobertura 98,0198%, 30 episódios; maior ausência 120 h, intervalo delimitador 121 h. Flags de observado/ausente coerentes. Valores originais preservados; não houve imputação.
+- Meteorologia: 51.890 linhas, 51.744 timestamps únicos; 146 duplicações equivalentes nas cinco variáveis seleccionadas, sem conflitos nelas. Temperatura K→°C e direcção 360°→0°. Presença em todas as 50.904 horas da grade PM2.5. Não foi verificado se colunas meteorológicas não seleccionadas diferem nas duplicações.
+- h1/h3/h6: 49.124/49.068/48.984 linhas e 39 atributos cada. Verificados todos os timestamps dos alvos e os valores correspondentes, lags e médias de PM2.5 e meteorologia e ausência de atributos não finitos. Reconstituídas as origens elegíveis (histórico completo anterior de 24 h e alvo exacto disponível); conjuntos coincidem integralmente, sem diferenças nestas verificações. Exclusões relativamente à grade: 1.780/1.836/1.920.
+- Manifesto com nomes e SHA-256 em `assets/data/audit.json`; scripts de conferência e geração em `scripts/`. Não há autenticação do fornecedor, nova validação física ou medição de desempenho preditivo. A preparação estatística não certifica representatividade espacial. O relatório multivariado recebido continua identificado como `engineering_fixture`.
+
+### Alterações entregues
+
+- Gráfico real de médias diárias na apresentação e em Resultados; vistas por ano, faixa horária de ausências, tabela mensal e dados derivados descarregáveis. Dias parciais identificados; não há suavização adicional ou interpolação.
+- Meteorologia no mesmo período e exemplo horário de alvos históricos 1/3/6 h, explicitamente distintos de previsões.
+- Objectivo reduzido a frase e três blocos; evolução “previsto, entregue, evidência e falta”. Textos e descrições extensas preservados em `metodo.html`, com aviso de documentação histórica e ligação para o estado actual. C4 de contexto continua depois de Resultados e materiais; o cenário completo é acessível na página interna.
+- Vídeo educativo de 177,37 s no leitor (2:57), 1280×720, H.264/AAC, 6.404.117 bytes, narração sintética portuguesa e 48 cues WebVTT. Transcrição e roteiro disponíveis. Imagens desenhadas por código com dados reais e cidade esquemática identificada; não há filmagem local nem gravação do autor. O acesso flutuante é ocultado durante a passagem pela área do vídeo para não tapar controles/legendas.
+- Referências metodológicas de RF, LSTM e métricas numa comparação na página interna; não é revisão sistemática nem comparação de resultados de estudos de PM2.5. Página educativa com acesso ao mapa OpenAQ Explorer, sem alegar cobertura ou validação de Luanda.
+
+### Verificações executadas
+
+- Chromium, larguras 320/768/1440 px, com e sem JavaScript, movimento reduzido: dez secções e destinos do menu, títulos abaixo do cabeçalho, selecção anual, mapa comparativo por teclado. Sem erros de página ou deslocamento horizontal da página. Gráficos/tabelas grandes têm regiões de deslocamento próprias.
+- Modo escuro em 360/1440 px: navegação, páginas de método e educação, permalinks de etapa/marco, modais e ausência de respostas locais HTTP ≥400. Sem overflow horizontal da página ou erros JS nesses cenários.
+- Reproduzido o vídeo em Chromium, metadados 177,375 s, 1280×720, faixa de legendas `pt` com 48 cues e estado `showing`. Seek para 100 s e reprodução posterior confirmados com o ficheiro carregado como Blob (100,000 → 104,933 s); a legenda activa nesse instante corresponde à frase da cena 6. O servidor temporário Python não suporta pedidos Range, portanto o teste por Blob distingue o ficheiro da limitação da pré-visualização. Entrega por HTTP de produção com Range e Safari/Firefox ainda não testados.
+- FFmpeg confirma H.264/AAC e sinal de áudio: média −19,3 dB e pico −5,4 dB, sem silêncio total. Os tempos das legendas usam os silêncios detectados no início/fim de cada frase; a repartição interna é proporcional ao número de palavras, não palavra a palavra. Não houve revisão humana integral da pronúncia nem de todos os quadros.
+- Barra de progresso confirmada em 0% no início e 100% no fim, com o novo conteúdo.
+- Parser: IDs únicos e referências/ficheiros locais válidos nas três páginas; XML de todos os SVG derivados válido. Sintaxe de `main.js`, `data-explorer.js`, `education.js` e `reading-progress.js`; `git diff --check` passou.
+- Capturas inspeccionadas: resultados em 320 e 1440 claro; início, evolução e resultados em 360/1440 escuro; gráfico integral, apresentação final e leitor com legendas em 1440 claro. Não foram inspeccionados todos os estados de cada secção em todas as combinações.
+- Cerca de 2.050–2.080 palavras inicialmente visíveis com JS nos cenários testados (aproximadamente 30% menos que as 2.960 da revisão anterior); sem JS há mais texto porque a comparação integral fica expandida. Não é a mesma contagem do portal. A página continua mais extensa que o exemplo MulitaMiner; a referência não foi tratada como limite obrigatório de palavras.
+
+### Pendências e limites
+
+Não foram executados treino, persistência, divisão cronológica ou avaliação preditiva. A gravação da aplicação a executar a preparação e a demonstração em aula continuam pendentes: a consulta GET da referência local não concluiu nos 12 s observados; não se conclui daí que a aplicação esteja indisponível. Pedidos de escrita foram bloqueados na consulta e não se executaram importações ou processamento. O vídeo entregue é educativo e não comprova execução da aplicação.
+
+Permanecem pendentes revisão integral de acessibilidade com leitor de ecrã, testes com utilizadores, Safari/Firefox, Lighthouse e desempenho de rede em produção. Nenhuma avaliação, nota ou comentário pessoal do portal foi importado para o site. Os caminhos locais dos insumos não foram publicados. Não houve alteração ao código da aplicação, commit, push ou publicação.
+
+Verificação final adicional em 360/1440 px: acesso flutuante visível no início, oculto junto ao vídeo e novamente visível ao regressar à apresentação, sem overflow. Os controles do vídeo ficam livres dessa sobreposição.
+
+## Refinamento visual da concentração — 24/11/2026
+
+Alterado apenas o painel de concentração e os SVG correspondentes (incluindo a miniatura que os reutiliza). Curva diária com preenchimento gradual, maior média diária anotada, legenda e ausências com cor distinta; três indicadores por período e leitura diária com cursor e controlo nativo de intervalo. Não há suavização, interpolação, classes de risco ou novas previsões.
+
+Executado em Chromium a 360/1440 px, modos claro/escuro, com movimento reduzido:
+
+- Indicadores de todo o histórico e 2020/2025/2026 comparados com o CSV diário: média ponderada pelas horas observadas, máximo horário e cobertura conferem nas duas casas apresentadas.
+- Dia 31/03/2025: “Sem observação”, 0/24 horas; sem ponto desenhado a zero. Home e seta direita no controlo de intervalo percorrem os dias, com valor textual acessível actualizado.
+- Clique real na curva actualiza o dia em foco. Movimentos acima de 10 px não seleccionam um dia, preservando o deslocamento táctil.
+- Sem overflow horizontal da página e sem erros JS nos quatro cenários; a área do gráfico permite deslocamento próprio em ecrãs pequenos.
+- Sem JavaScript, gráfico e tabela acessíveis. Com consulta do CSV bloqueada, gráfico estático continua disponível e indicadores de todo o histórico são ocultados quando se escolhe outro período.
+- Parser confirma IDs únicos e destinos locais das três páginas, e XML dos SVG válido. Sintaxe de `data-explorer.js` e `git diff --check` passaram.
+- Inspeccionadas capturas do painel em 1440 claro e 360 escuro e captura de viewport da curva final em 1440 claro. A imagem de painel completo inclui artefactos de composição dos elementos fixos; a leitura real foi conferida adicionalmente na captura de viewport.
+
+Dados de origem, relatório, contagens, CSV derivados, vídeo e aplicação não foram alterados. Leitor de ecrã e outros motores de navegador não foram testados nesta revisão. Sem publicação.
+
+## Botões de acção e movimento discreto — 24/11/2026
+
+Links de acção (CTA, consultas, downloads, registos e ligações finais) passaram a usar um único botão de contorno discreto, com variante compacta em texto denso. Navegação, migalhas, citações, backlinks e links dentro de texto mantêm a aparência de link; os nós dos diagramas C4 e o botão flutuante da aplicação preservam o desenho próprio. Foram identificados 27 links em `index.html`, 41 em `metodo.html` e 12 em `pm25.html`. Os rótulos “Consultar método” dos cartões compactos e “Explorar este marco” dos cartões de jornada receberam o mesmo tratamento visual sem alterar os seus alvos.
+
+A camada partilhada `assets/motion.js` aplica entradas únicas por `IntersectionObserver`, com verificação de reserva por `scroll`/`requestAnimationFrame`, animação apenas de opacidade e deslocação de 14 px, e respeito a `prefers-reduced-motion` e ao botão “Pausar movimento”. O cabeçalho ganha elevação mínima após sair do topo; a troca de período no gráfico tem crossfade curto. Sem JavaScript, nenhum conteúdo fica oculto.
+
+Verificado em Chromium local: sintaxe de todos os JS, `git diff --check`, ausência de erros de consola e de scroll horizontal nas três páginas; todos os botões de acção visíveis com borda, raio e sem sublinhado. A secção 09 continua oculta e os seus links mantêm o estilo caso seja reactivada. Lighthouse: `index.html` 0,97 / 1 / 1, `metodo.html` 0,97 / 1 / 1 e `pm25.html` 1 / 1 / 1 (acessibilidade / boas práticas / SEO). A única falha restante é de contraste no `hero`, pré-existente; nenhum botão novo foi sinalizado. Nenhum commit, push ou publicação.
+
+## Mapa global na secção 02 — 24/11/2026
+
+### Pesquisa e critérios
+
+- Fonte consultada: WHO Ambient Air Quality Database V8.0, actualizada a 30/06/2026, em `https://www.who.int/data/gho/data/themes/air-pollution/who-air-quality-database`. O ficheiro Excel oficial foi descarregado e analisado localmente: 45.742 registos e 125 países.
+- Para cada uma das 19 cidades foi escolhido o registo mais recente da V8.0 com média anual de PM2.5 numérica e cobertura temporal de pelo menos 50%; os anos ficam entre 2014 e 2024. Ano, valor e cobertura foram lidos directamente da base. A selecção inicial apurou valores antigos em alguns casos; foi corrigida para privilegiar o ano mais recente, mesmo quando a linha não traz coordenadas.
+- As posições desenhadas são aproximações do centro urbano, usadas apenas para localizar a cidade no globo; não são coordenadas de estações de medição nem resultados espaciais. A OMS adverte que a base não serve para classificar as cidades mais poluídas nem para comparações directas entre países; essa ressalva está no mapa e na tabela textual.
+- Angola não tem registos na V8.0 (`AGO rows 0`); Luanda aparece como foco do estudo, sem valor numérico atribuído. A análise do projecto continua baseada em estimativas OpenWeather, sem validação por sensores locais.
+- Contornos: Natural Earth `ne_110m_admin_0_countries` (domínio público), simplificados com Ramer–Douglas–Peucker e embutidos como SVG inline. Angola recebe caminho próprio e destaque; a Antártida foi omitida.
+
+### Implementação
+
+- `index.html` e `metodo.html`: figura na coluna esquerda de `.context-grid`, imediatamente abaixo do texto «A qualidade do ar começa por aquilo que nem sempre conseguimos ver.». A figura agrupa lead e mapa em `.context-left`.
+- SVG com 20 nós (19 cidades + Luanda), 21 arcos esquemáticos, rótulos nos pontos de referência, legenda, três controlos, leitura acessível actualizada e 20 botões de selecção. As linhas ligam regiões; não representam transporte de ar nem fluxos de dados.
+- `<details>` com tabela de 20 linhas, `caption`, `scope`, unidade `µg/m³`, ano e cobertura; funciona sem JavaScript. A fonte OMS e os contornos Natural Earth estão citados no rodapé da figura.
+- `assets/world-map.js`: melhoria progressiva, sem pedidos remotos. Selecciona por clique, ponto, foco e teclado (Enter/Espaço); alterna as ligações e aplica o zoom centrado em Luanda. Respeita `prefers-reduced-motion` e a classe `motion-paused` do botão «Pausar movimento». Sem JavaScript, o SVG, os rótulos e a tabela permanecem visíveis.
+- `assets/style.css`: traços e nós uniformes, sem escala de cores comparativa; animações curtas de desenho e entrada, desactivadas na impressão, no movimento reduzido e quando o movimento está pausado. O painel expansível recebeu `position:relative` para manter o indicador `+` dentro do resumo.
+
+### Verificações executadas
+
+- `node --check` em todos os scripts e `git diff --check`: passaram.
+- Chromium local, `index.html` e `metodo.html`: 20 nós, 21 ligações, 20 botões de selecção e 20 linhas na tabela; leitura inicial «Luanda, Angola». Sem erros de consola e sem deslocamento horizontal da página.
+- Interacção por clique e por Enter: Lima e Deli actualizam o painel com ano, média e cobertura correctos; apenas as ligações do ponto seleccionado ficam realçadas. O controlo «Focar Luanda» centra o mapa (matriz `2.2` com translação `-681,-450`) e «Vista global» repõe a transformação. «Ligações» esconde os arcos e actualiza `aria-pressed`.
+- O botão global «Pausar movimento» remove as animações dos pulsos e dos nós e mantém os traços completos; o painel expansível e os controlos conservam foco visível.
+- Lighthouse após o mapa: `index.html` 0,97 / 1 / 1 e `metodo.html` 0,97 / 1 / 1 (acessibilidade / boas práticas / SEO). A única falha continua a ser contraste pré-existente no `hero`; nenhum elemento do mapa foi sinalizado.
+- Nenhum commit, push ou publicação.
+
+## Melhoria do vídeo — 24/11/2026
+
+### Conteúdo e rigor
+
+- O roteiro passou de 8 para 9 cenas. Foi acrescentada uma cena sobre o contexto global da OMS V8.0: Angola sem registos, Luanda sem valor oficial atribuído e o mapa do site descrito como ligação esquemática, sem ranking nem comparação entre países.
+- Os números das cenas foram lidos de `assets/data/audit.json`: 49.896 observações, 98,02% de cobertura, 1.008 horas ausentes em 30 episódios, maior lacuna de 120 horas e 121 horas entre as observações que a delimitam, 39 atributos por horizonte e 49.124/49.068/48.984 linhas em t+1/t+3/t+6. Nenhum desses números foi estimado para o vídeo.
+- A cena horária usa o exemplo real de 02/12/2020 às 12h UTC. Os três pontos são identificados como alvos históricos, não previsões. A cena final atribui persistência, Random Forest e LSTM e MAE/RMSE à fase futura; não apresenta qualquer resultado preditivo.
+- A ressalva sobre a origem atribuída à OpenWeather e sobre a conferência dos CSV foi mantida e reforçada: verificar ficheiros não autentica a origem física nem substitui sensores locais.
+- O texto do leitor em `index.html` passou a indicar legendas alinhadas à fala e a distinção entre alvos históricos e previsões. `README.md` e esta verificação foram actualizados com a nova duração, tamanho e número de cues.
+
+### Visuais e edição
+
+- Cenas redesenhadas em 1280×720 com hierarquia tipográfica constante, cartões, gráfico real de médias diárias, ilustração horária com os alvos em t+1/t+3/t+6, globo esquemático com África realçada e quadro de etapas de preparação.
+- A transição entre cenas é um crossfade de 0,65 s, com entrada/saída suaves no vídeo e no áudio. Foi removido o zoom contínuo da versão anterior: as cenas são estáticas e legíveis, sem movimento que distraia da leitura.
+- A capa foi regenerada a partir da primeira cena. O ficheiro passou de cerca de 2,6 MB para 6,1 MB apesar da remoção do zoom, sobretudo pelo aumento de 8 para 9 cenas e pela narração mais longa; a codificação usa `crf 26`, `preset slow` e `tune stillimage`.
+
+### Narração e legendas
+
+- A voz sintética Joana (macOS) foi mantida, a 156 palavras/minuto, com 0,28 s entre frases e 0,70 s no fim de cada cena.
+- `scripts/make_narration.py` converte cada fala para WAV mono a 22,05 kHz e detecta os silêncios inicial/final com `silencedetect=noise=-45dB:d=0.18`. Os tempos guardados em `/tmp/pm25-video/scenes.json` alimentam directamente a faixa WebVTT.
+- As 48 cues foram repartidas proporcionalmente ao número de palavras dentro da parte falada de cada frase, com limite de 12 palavras/cue. Não é reconhecimento automático palavra a palavra; a última cue termina em 02:57,315, dentro da duração do vídeo.
+- `assets/video/transcricao.txt` e `assets/video/producao.json` foram regenerados; o segundo inclui agora o número de cues e o método de alinhamento.
+
+### Técnico e verificações
+
+- MP4 H.264 High/level 4.0, yuv420p, 24 fps, 1280×720; áudio AAC mono 48 kHz a 80 kb/s; `+faststart` para reprodução progressiva. Sem autoplay e com `preload="none"` no site.
+- `py_compile` passou em `scripts/make_narration.py` e `scripts/render_video.py`; `git diff --check` passou após as alterações.
+- Chromium local: metadados 177,375 s, 1280×720, faixa `pt` com 48 cues em modo `showing`; seek para 100 s e reprodução até 104,933 s com o ficheiro carregado como Blob; legenda activa em 100 s corresponde à frase correcta. Sem erros de consola e sem deslocamento horizontal da página.
+- FFmpeg: média de volume −19,3 dB e pico −5,4 dB, sem silêncio total. Não houve revisão humana integral da pronúncia, nem testes em Safari/Firefox ou com leitor de ecrã.
+- Nenhum commit, push ou publicação.

@@ -1,5 +1,50 @@
 # PM2.5 / Luanda
 
+## Versão orientada aos dados — 24/11/2026
+
+A apresentação actual está em `index.html`; as explicações científicas completas anteriores foram preservadas em `metodo.html`, identificado como documentação detalhada. Esta revisão prevalece sobre descrições históricas abaixo sobre ausência de gráfico, de vídeo ou materiais pendentes. `pm25.html` conserva o texto educativo e acrescenta acesso ao mapa mundial OpenAQ, sem o apresentar como validação de Luanda.
+
+- Série real na apresentação inicial e em Resultados e materiais: médias diárias de PM2.5, selecção de ano, faixa horária de lacunas, tabela mensal acessível e CSV derivados para download.
+- Temperatura no mesmo período e exemplo horário com os alvos históricos em t+1, t+3 e t+6. Os alvos não são previsões; médias diárias não são máximos horários nem garantem dias completos.
+- Objectivo numa frase e três blocos; evolução com previsto, entregue, evidência e falta; aprofundamento C4 e método numa página interna.
+- Mapa global na secção 02 com contornos Natural Earth e 19 cidades seleccionadas da base OMS V8.0 (2026); Angola realçada e Luanda identificada como foco do estudo, sem valor OMS. As posições são aproximadas, as ligações são esquemáticas e não representam fluxos de ar ou dados; os valores não são usados para classificar cidades nem comparar países.
+- Vídeo educativo próprio de 2:57, 1280×720, cerca de 6,1 MB, H.264/AAC, narração sintética Joana (macOS), 48 cues de legendas WebVTT alinhadas à fala e transcrição. Nove cenas incluem contexto global com a ressalva da OMS, contagens auditadas e a distinção entre alvos históricos e previsão. Não reproduz filmagem local, não imita o autor e não é gravação de execução da aplicação. `preload="none"`; não inicia automaticamente.
+- Conferência independente de cinco CSV fornecidos pelo autor: `assets/data/audit.json` contém nomes e SHA-256 dos insumos, contagens e resultados. Os insumos originais (cerca de 80 MB) não foram copiados para o site; apenas derivados e o PDF de preparação disponibilizado foram incluídos.
+
+### Reproduzir os derivados
+
+Python 3, biblioteca padrão. Os cinco argumentos são caminhos locais escolhidos pelo responsável, não URLs da aplicação:
+
+```sh
+python3 scripts/build_site_data.py --pm25 /caminho/pm25.csv --h1 /caminho/h1.csv --h3 /caminho/h3.csv --h6 /caminho/h6.csv --weather /caminho/meteorologia.csv
+python3 scripts/build_site_charts.py
+```
+
+O gerador verifica grade horária única, flags, valores finitos, timestamps exactos dos alvos, todos os 39 atributos e a igualdade entre as origens elegíveis reconstruídas e cada CSV supervisionado. Meteorologia: temperatura declarada em Kelvin convertida para °C; direcção 360° normalizada para 0°; duplicações colapsadas apenas quando equivalentes nas cinco variáveis seleccionadas. `pressure` é usado como pressão ao nível do mar conforme a declaração fornecida no relatório; isso não autentica a semântica física do fornecedor. Não há treino, imputação, remoção de extremos ou nova execução do motor da aplicação.
+
+O exemplo horário é 02/12/2020 às 12h UTC, com histórico de 24 h e alvos exactos. Agregações diárias usam apenas os valores presentes; o CSV derivado inclui horas observadas/esperadas/ausentes. Médias meteorológicas são calculadas nas horas da grade PM2.5, incluindo as horas em que o PM2.5 está ausente. Não se calcula média aritmética de direcção do vento.
+
+### Reproduzir o vídeo
+
+No macOS, com a voz portuguesa Joana instalada e um ambiente Python com Pillow e imageio-ffmpeg:
+
+```sh
+python3 scripts/make_narration.py
+python3 scripts/render_video.py
+```
+
+Roteiro público: `assets/video/roteiro.json`. A narração usa `say`; temporários em `/tmp/pm25-video`. Os silêncios no início/fim de cada frase são detectados para posicionar as legendas, que depois são repartidas proporcionalmente dentro da fala; não é reconhecimento palavra a palavra. As imagens são desenhadas por código com os derivados dos dados; as transições são curtas e não há zoom. A voz é sintética, não gravada pelo autor. O leitor nativo disponibiliza pausa, legendas e controles; não há reprodução automática.
+
+### Limites que permanecem
+
+A origem física e o produto OpenWeather não foram autenticados. O relatório multivariado recebido mantém a classificação `engineering_fixture`; não se removeu essa classificação nem se transferiu a aprovação para os dados históricos. A presente conferência é dos CSV fornecidos, cujas contagens e atributos coincidem com o relatório; não é validação científica integral ou certificação operacional. A hipótese de atraso de 1 h continua retrospectiva. A diferença espacial de aproximadamente 3,57 km vem das coordenadas declaradas, sem equivalência ambiental demonstrada.
+
+Persistência, treino RF/LSTM, avaliação e definição do protocolo cronológico continuam pendentes. A documentação primária dos métodos está comparada em `metodo.html#literatura`, sem alegar revisão sistemática ou transferir métricas de outros trabalhos. O gráfico e o vídeo não estabelecem causas de picos.
+
+A demonstração em aula e uma gravação da aplicação a executar a preparação não são comprovadas por esta entrega. A consulta de referência da aplicação local foi tentada em modo de leitura, mas não concluiu durante a observação. Não foram executadas operações de escrita, importação ou processamento nessa aplicação. Nenhum código da aplicação foi alterado, e não houve commit, push ou publicação.
+
+---
+
 Site académico individual de **Jeorgel Chitende**, na disciplina Laboratório de Inteligência Artificial Aplicada, PPGES / Universidade Federal do Pampa — UNIPAMPA.
 
 **Previsão de Curto Prazo de PM2.5 com IA em Contexto Urbano Angolano.**
@@ -25,6 +70,7 @@ O site segue automaticamente o tema claro ou escuro do sistema através de `pref
 - `index.html`: conteúdo científico, navegação, metodologia e diário.
 - `assets/style.css`: estilos responsivos e variáveis de cores, espaçamentos e tipografia em `:root`.
 - `assets/main.js`: menu móvel com estado acessível, fecho por ligação e tecla Escape.
+- `assets/motion.js` e `assets/world-map.js`: entradas discretas partilhadas e interacção progressiva do mapa global da secção 02.
 - `assets/favicon.svg`: ícone original, sem logótipos institucionais.
 - `assets/social.png`: imagem de partilha PNG 1200 × 630 usada em `og:image`. O SVG anterior é preservado como arte de origem da primeira versão.
 - `materiais/`: destino dos relatórios e imagens reais; ficheiros ainda não fornecidos.
@@ -333,3 +379,9 @@ Persistência, treino, avaliação e relato mantêm-se numa sequência separada 
 A ordem do menu acompanha as dez secções da página, incluindo “Como funciona” depois de “Resultados e materiais”. A numeração dos cabeçalhos foi alinhada com a do menu. O título “Resultados e materiais” identifica directamente o destino; a introdução de “Como funciona” distingue a arquitectura da aplicação do percurso metodológico.
 
 Abrir uma explicação em modal conserva a posição de leitura da página. O histórico do navegador acompanha as âncoras e fecha a janela quando regressa a uma secção. O menu móvel admite deslocamento vertical em ecrãs baixos, mantendo os destinos acessíveis.
+
+### Leitura visual da concentração
+
+O painel de concentração apresenta área sob a curva diária, maior média diária assinalada, ausências em azul-cinzento e três indicadores relativos ao período seleccionado: média ponderada pelas horas observadas, máximo horário e cobertura. A média ponderada parte dos agregados diários exportados (arredondados a quatro casas), sendo apresentada com duas casas decimais. Não foram acrescentadas classes de risco ou limites sanitários ao gráfico.
+
+Com JavaScript, o visitante pode tocar/clicar na curva ou percorrer um controlo nativo de intervalo com teclado para consultar cada dia e a sua cobertura. Dias sem observação mostram texto de ausência e nenhum ponto a zero. O SVG e a tabela continuam disponíveis sem JavaScript. Se o CSV derivado não carregar, indicadores relativos ao histórico completo são ocultados ao escolher um ano para evitar atribuição indevida ao período. As fontes e os números originais não foram alterados.

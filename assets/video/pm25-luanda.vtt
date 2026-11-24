@@ -1,0 +1,158 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:03.852
+Em Luanda, o ar faz parte da vida de todos os dias.
+
+00:00:04.132 --> 00:00:06.806
+Trânsito, poeira e condições atmosféricas são
+
+00:00:06.806 --> 00:00:09.925
+motivos para observar a qualidade do ar.
+
+00:00:10.205 --> 00:00:12.789
+A pergunta de Jeorgel Chitende é:
+
+00:00:12.789 --> 00:00:15.803
+podemos antecipar o material particulado fino com
+
+00:00:15.803 --> 00:00:18.818
+uma, três ou seis horas de antecedência?
+
+00:00:19.518 --> 00:00:24.309
+A base global da OMS reúne medições de PM 2,5
+
+00:00:24.309 --> 00:00:26.226
+comunicadas por muitos países.
+
+00:00:26.506 --> 00:00:28.984
+Angola não tem registos nessa base;
+
+00:00:28.984 --> 00:00:32.702
+Luanda não recebe aqui um valor oficial da OMS.
+
+00:00:32.982 --> 00:00:36.440
+O mapa do site liga cidades de forma esquemática:
+
+00:00:36.440 --> 00:00:39.899
+não é um ranking nem uma comparação entre países.
+
+00:00:39.949 --> 00:00:44.437
+O estudo reúne duas fontes atribuídas à OpenWeather:
+
+00:00:44.437 --> 00:00:48.364
+concentrações de PM 2,5 e dados meteorológicos.
+
+00:00:48.644 --> 00:00:51.504
+A meteorologia inclui temperatura, humidade, pressão
+
+00:00:51.504 --> 00:00:55.794
+ao nível do mar, velocidade e direcção do vento.
+
+00:00:56.074 --> 00:01:00.006
+A conferência dos ficheiros verifica valores e
+transformações;
+
+00:01:00.006 --> 00:01:04.431
+não autentica a origem física nem substitui sensores
+locais.
+
+00:01:04.481 --> 00:01:08.225
+Este é o histórico real fornecido para o site,
+
+00:01:08.225 --> 00:01:09.888
+mostrado por médias diárias.
+
+00:01:10.168 --> 00:01:13.168
+A cobertura observacional é de noventa e oito
+
+00:01:13.168 --> 00:01:15.042
+vírgula zero dois por cento.
+
+00:01:15.322 --> 00:01:19.164
+As médias diárias facilitam a leitura, mas podem
+
+00:01:19.164 --> 00:01:23.006
+atenuar picos horários. Não houve suavização nem
+interpolação.
+
+00:01:23.056 --> 00:01:27.581
+Há mil e oito horas ausentes, distribuídas por
+trinta episódios.
+
+00:01:27.861 --> 00:01:31.288
+A maior ausência dura cento e vinte horas. Entre as
+
+00:01:31.288 --> 00:01:35.057
+observações que a delimitam decorrem cento e vinte e
+uma horas.
+
+00:01:35.337 --> 00:01:39.805
+A preparação conserva essas posições sem inventar
+concentrações.
+
+00:01:39.855 --> 00:01:42.379
+A aplicação organiza o percurso:
+
+00:01:42.379 --> 00:01:46.923
+importar, diagnosticar, alinhar as horas e construir
+os atributos.
+
+00:01:47.203 --> 00:01:52.738
+No site, as explicações completas continuam
+disponíveis numa página de método.
+
+00:01:52.788 --> 00:01:57.943
+Para cada instante de origem, as entradas usam
+apenas observações anteriores.
+
+00:01:58.223 --> 00:02:01.865
+O alvo é a concentração observada exactamente uma,
+
+00:02:01.865 --> 00:02:04.142
+três ou seis horas depois.
+
+00:02:04.422 --> 00:02:07.949
+Neste exemplo real, as três marcações são alvos
+
+00:02:07.949 --> 00:02:10.595
+históricos, não resultados de um modelo.
+
+00:02:10.645 --> 00:02:13.851
+Os ficheiros contêm trinta e nove atributos por
+
+00:02:13.851 --> 00:02:16.657
+horizonte, com desfasamentos e médias do passado.
+
+00:02:16.937 --> 00:02:20.232
+A conferência independente comparou alvos, atributos
+
+00:02:20.232 --> 00:02:25.723
+e elegibilidade com os dados fornecidos, sem
+divergências nessas verificações.
+
+00:02:25.773 --> 00:02:29.558
+Preparar os dados ainda não responde à pergunta da
+previsão.
+
+00:02:29.838 --> 00:02:33.965
+A próxima fase é executar a persistência, que repete
+
+00:02:33.965 --> 00:02:39.008
+a última concentração disponível, e depois treinar
+Random Forest e LSTM.
+
+00:02:39.288 --> 00:02:42.302
+A comparação deverá respeitar a ordem temporal e
+
+00:02:42.302 --> 00:02:45.693
+usar os mesmos períodos de teste por horizonte, com
+
+00:02:45.693 --> 00:02:49.085
+erro absoluto médio e raiz do erro quadrático médio.
+
+00:02:49.365 --> 00:02:52.456
+Ainda não há resultados preditivos. Explore os
+
+00:02:52.456 --> 00:02:57.315
+dados, consulte as limitações e acompanhe a próxima
+etapa no site.

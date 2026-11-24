@@ -1,0 +1,110 @@
+/* Apenas troca de vistas SVG pré-calculadas. O gráfico principal e a tabela não dependem de JS. */
+const seriesPeriod = document.querySelector('#series-period');
+if (seriesPeriod) {
+  document.querySelector('.data-controls').hidden = false;
+  seriesPeriod.addEventListener('change', () => {
+    const value = seriesPeriod.value;
+    if (!['todos','2020','2021','2022','2023','2024','2025','2026'].includes(value)) return;
+    const summary = document.querySelector('.concentration-summary');
+    if (summary && !seriesPeriod.dataset.dailyReady) summary.hidden = value !== 'todos';
+    const image = document.querySelector('#pm25-series-chart');
+    const status = document.querySelector('#series-status');
+    image.src = `assets/data/pm25-${value}.svg`;
+    image.alt = `Médias diárias de PM2.5 ${value === 'todos' ? 'em todo o histórico' : 'em '+value}, com faixa das horas ausentes. Valores em µg/m³.`;
+    status.textContent = `${value === 'todos' ? 'Todo o histórico' : value} · médias diárias; faixa inferior: horas ausentes de PM2.5. Sem interpolação.`;
+    if (!document.documentElement.classList.contains('motion-paused') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      image.getAnimations().forEach(animation => animation.cancel());
+      image.animate([{opacity:.45},{opacity:1}],{duration:220,easing:'ease-out'});
+      status.getAnimations().forEach(animation => animation.cancel());
+      status.animate([{opacity:.5},{opacity:1}],{duration:180,easing:'ease-out'});
+    }
+  });
+}
+// O acesso flutuante não deve cobrir legendas ou controlos do leitor.
+const projectVideo = document.querySelector('.video-panel');
+const applicationAccess = document.querySelector('.application-float');
+if (projectVideo && applicationAccess && 'IntersectionObserver' in window) {
+  new IntersectionObserver(entries => {
+    applicationAccess.hidden = entries[0].isIntersecting;
+  }, {rootMargin:'40px 0px',threshold:0}).observe(projectVideo);
+}
+
+/* Leitura diária a partir dos mesmos derivados usados pelos SVG. */
+if (seriesPeriod) {
+  const panel = document.querySelector('.concentration-panel');
+  const slider = document.querySelector('#concentration-day-slider');
+  const image = document.querySelector('#pm25-series-chart');
+  const cursor = panel.querySelector('.concentration-cursor');
+  const number = new Intl.NumberFormat('pt-PT', {minimumFractionDigits:2,maximumFractionDigits:2});
+  const date = value => new Intl.DateTimeFormat('pt-PT', {day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(value+'T12:00:00Z'));
+  let daily = [], selected = [];
+  function showDay(index, announce = false) {
+    const row = selected[index];
+    if (!row) return;
+    slider.value = String(index);
+    const value = row.mean === null ? 'Sem observação' : `${number.format(row.mean)} µg/m³`;
+    document.querySelector('#concentration-day').textContent = date(row.date);
+    document.querySelector('#concentration-value').textContent = value;
+    document.querySelector('#concentration-day-coverage').textContent = `${row.observed} de ${row.grid} horas observadas · ${row.missing} ausentes${row.observed < row.grid && row.observed > 0 ? ' · média de dia incompleto' : ''}`;
+    slider.setAttribute('aria-valuetext', `${date(row.date)}: ${value}; ${row.observed} de ${row.grid} horas observadas`);
+    const ceiling = Math.max(50, Math.ceil(Math.max(...selected.filter(r => r.mean !== null).map(r => r.mean))/50)*50);
+    const x = (64+(index+.5)/selected.length*912)/10;
+    cursor.hidden = false;
+    cursor.style.left = `${x}%`;
+    cursor.style.setProperty('--point-y', row.mean === null ? '100%' : `${(60+(ceiling-row.mean)/ceiling*290-60)/290*100}%`);
+    cursor.classList.toggle('is-missing', row.mean === null);
+    if (announce) document.querySelector('#concentration-day-announcement').textContent = `${date(row.date)}: ${value}.`;
+  }
+  function updatePeriod() {
+    selected = daily.filter(row => seriesPeriod.value === 'todos' || row.date.startsWith(seriesPeriod.value));
+    if (!selected.length) return;
+    const observed = selected.reduce((total,r) => total+r.observed,0);
+    const grid = selected.reduce((total,r) => total+r.grid,0);
+    const mean = selected.reduce((total,r) => total+(r.mean === null ? 0 : r.mean*r.observed),0)/observed;
+    const maximum = Math.max(...selected.filter(r => r.max !== null).map(r => r.max));
+    document.querySelector('#concentration-mean').replaceChildren(document.createTextNode(number.format(mean)+' '));
+    const meanUnit = document.createElement('span'); meanUnit.textContent = 'µg/m³';
+    document.querySelector('#concentration-mean').append(meanUnit);
+    document.querySelector('#concentration-max').replaceChildren(document.createTextNode(number.format(maximum)+' '));
+    document.querySelector('#concentration-max').append(meanUnit.cloneNode(true));
+    document.querySelector('#concentration-coverage').replaceChildren(document.createTextNode(number.format(observed/grid*100)));
+    const percent = document.createElement('span'); percent.textContent = '%';
+    document.querySelector('#concentration-coverage').append(percent);
+    slider.max = String(selected.length-1);
+    // Começar pelo dia de maior média; não confundir com o máximo horário.
+    const peak = selected.reduce((best,r,i) => r.mean !== null && (selected[best].mean === null || r.mean > selected[best].mean) ? i : best, 0);
+    showDay(peak);
+  }
+  fetch('assets/data/serie-diaria.csv').then(response => {
+    if (!response.ok) throw new Error('Série diária indisponível');
+    return response.text();
+  }).then(csv => {
+    daily = csv.trim().split(/\r?\n/).slice(1).map(line => {
+      const cells = line.split(',');
+      return {date:cells[0],mean:cells[1] === '' ? null : Number(cells[1]),max:cells[3] === '' ? null : Number(cells[3]),observed:Number(cells[4]),grid:Number(cells[5]),missing:Number(cells[6])};
+    });
+    if (!daily.length || daily.some(r => !/^\d{4}-\d{2}-\d{2}$/.test(r.date) || (r.mean !== null && !Number.isFinite(r.mean)) || !Number.isFinite(r.grid))) throw new Error('Formato não reconhecido');
+    seriesPeriod.dataset.dailyReady = 'true';
+    panel.querySelector('.concentration-summary').hidden = false;
+    updatePeriod();
+    panel.querySelector('.concentration-inspector').hidden = false;
+    seriesPeriod.addEventListener('change', updatePeriod);
+    slider.addEventListener('input', () => showDay(Number(slider.value)));
+    slider.addEventListener('change', () => showDay(Number(slider.value), true));
+    let pointerStart = null;
+    image.addEventListener('pointerdown', event => { pointerStart = {x:event.clientX,y:event.clientY}; });
+    image.addEventListener('pointerup', event => {
+      if (event.button !== 0 || !pointerStart) return;
+      const start = pointerStart; pointerStart = null;
+      if (Math.hypot(event.clientX-start.x,event.clientY-start.y) > 10) return;
+      const bounds = image.getBoundingClientRect();
+      const position = ((event.clientX-bounds.left)/bounds.width*1000-64)/912;
+      showDay(Math.max(0,Math.min(selected.length-1,Math.floor(position*selected.length))), true);
+    });
+    image.addEventListener('pointercancel', () => {pointerStart = null;});
+  }).catch(() => {
+    // SVG e tabela continuam acessíveis se a consulta falhar ou for bloqueada.
+    panel.querySelector('.concentration-inspector').hidden = true;
+    cursor.hidden = true;
+  });
+}

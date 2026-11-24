@@ -1,0 +1,91 @@
+[
+  {
+    "title": "O ar que nem sempre vemos",
+    "kicker": "LUANDA · UMA PERGUNTA DE INVESTIGAÇÃO",
+    "kind": "city",
+    "lines": [
+      "Em Luanda, o ar faz parte da vida de todos os dias.",
+      "Trânsito, poeira e condições atmosféricas são motivos para observar a qualidade do ar.",
+      "A pergunta de Jeorgel Chitende é: podemos antecipar o material particulado fino com uma, três ou seis horas de antecedência?"
+    ]
+  },
+  {
+    "title": "Contexto global, com cautela",
+    "kicker": "BASE DA OMS · V8.0, 2026",
+    "kind": "world",
+    "lines": [
+      "A base global da OMS reúne medições de PM 2,5 comunicadas por muitos países.",
+      "Angola não tem registos nessa base; Luanda não recebe aqui um valor oficial da OMS.",
+      "O mapa do site liga cidades de forma esquemática: não é um ranking nem uma comparação entre países."
+    ]
+  },
+  {
+    "title": "Dois históricos, um percurso",
+    "kicker": "DADOS FORNECIDOS PELO INVESTIGADOR",
+    "kind": "sources",
+    "lines": [
+      "O estudo reúne duas fontes atribuídas à OpenWeather: concentrações de PM 2,5 e dados meteorológicos.",
+      "A meteorologia inclui temperatura, humidade, pressão ao nível do mar, velocidade e direcção do vento.",
+      "A conferência dos ficheiros verifica valores e transformações; não autentica a origem física nem substitui sensores locais."
+    ]
+  },
+  {
+    "title": "49.896 observações preservadas",
+    "kicker": "DEZEMBRO DE 2020 A SETEMBRO DE 2026 · UTC",
+    "kind": "series",
+    "lines": [
+      "Este é o histórico real fornecido para o site, mostrado por médias diárias.",
+      "A cobertura observacional é de noventa e oito vírgula zero dois por cento.",
+      "As médias diárias facilitam a leitura, mas podem atenuar picos horários. Não houve suavização nem interpolação."
+    ]
+  },
+  {
+    "title": "Ausência não é zero",
+    "kicker": "1.008 HORAS AUSENTES · 30 EPISÓDIOS",
+    "kind": "gaps",
+    "lines": [
+      "Há mil e oito horas ausentes, distribuídas por trinta episódios.",
+      "A maior ausência dura cento e vinte horas. Entre as observações que a delimitam decorrem cento e vinte e uma horas.",
+      "A preparação conserva essas posições sem inventar concentrações."
+    ]
+  },
+  {
+    "title": "Preparação transparente",
+    "kicker": "OPERAÇÕES DA MESMA APLICAÇÃO",
+    "kind": "pipeline",
+    "lines": [
+      "A aplicação organiza o percurso: importar, diagnosticar, alinhar as horas e construir os atributos.",
+      "No site, as explicações completas continuam disponíveis numa página de método."
+    ]
+  },
+  {
+    "title": "Uma origem, três alvos",
+    "kicker": "OBSERVAÇÕES HISTÓRICAS · NÃO SÃO PREVISÕES",
+    "kind": "horizons",
+    "lines": [
+      "Para cada instante de origem, as entradas usam apenas observações anteriores.",
+      "O alvo é a concentração observada exactamente uma, três ou seis horas depois.",
+      "Neste exemplo real, as três marcações são alvos históricos, não resultados de um modelo."
+    ]
+  },
+  {
+    "title": "39 atributos por horizonte",
+    "kicker": "TRÊS CONJUNTOS INDEPENDENTES",
+    "kind": "samples",
+    "lines": [
+      "Os ficheiros contêm trinta e nove atributos por horizonte, com desfasamentos e médias do passado.",
+      "A conferência independente comparou alvos, atributos e elegibilidade com os dados fornecidos, sem divergências nessas verificações."
+    ]
+  },
+  {
+    "title": "O que falta responder?",
+    "kicker": "PERSISTÊNCIA · RANDOM FOREST · LSTM",
+    "kind": "future",
+    "lines": [
+      "Preparar os dados ainda não responde à pergunta da previsão.",
+      "A próxima fase é executar a persistência, que repete a última concentração disponível, e depois treinar Random Forest e LSTM.",
+      "A comparação deverá respeitar a ordem temporal e usar os mesmos períodos de teste por horizonte, com erro absoluto médio e raiz do erro quadrático médio.",
+      "Ainda não há resultados preditivos. Explore os dados, consulte as limitações e acompanhe a próxima etapa no site."
+    ]
+  }
+]

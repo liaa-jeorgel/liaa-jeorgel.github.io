@@ -1,0 +1,70 @@
+{
+  "period": [
+    "2020-12-01T12:00:00+00:00",
+    "2026-09-22T11:00:00+00:00"
+  ],
+  "grid": 50904,
+  "observations": 49896,
+  "missing": 1008,
+  "coverage": 98.01980198019803,
+  "gap_episodes": 30,
+  "max_missing_hours": 120,
+  "mean": 24.440456148789483,
+  "max": 568.32,
+  "min": 0.0,
+  "weather_rows": 51890,
+  "weather_unique": 51744,
+  "weather_duplicate_rows": 146,
+  "weather_conflicting_selected": 0,
+  "weather_overlap": 50904,
+  "horizons": {
+    "1": {
+      "rows": 49124,
+      "excluded_vs_grid": 1780,
+      "features": 39,
+      "errors": {},
+      "eligible_origins_match": true,
+      "eligible_difference": 0
+    },
+    "3": {
+      "rows": 49068,
+      "excluded_vs_grid": 1836,
+      "features": 39,
+      "errors": {},
+      "eligible_origins_match": true,
+      "eligible_difference": 0
+    },
+    "6": {
+      "rows": 48984,
+      "excluded_vs_grid": 1920,
+      "features": 39,
+      "errors": {},
+      "eligible_origins_match": true,
+      "eligible_difference": 0
+    }
+  },
+  "files": {
+    "pm25": {
+      "name": "pm25_luanda_preparado (3).csv",
+      "sha256": "c62ffa9ceba50cd9f5b22f3eed6afc1fb0b33b2a04e59866018ffead91e41e61"
+    },
+    "h1": {
+      "name": "supervised_h1 (1).csv",
+      "sha256": "59dbf68536da86bc958dbf6f1263706c10afdb26d544bf08ae8f2ea7b28fbda8"
+    },
+    "h3": {
+      "name": "supervised_h3.csv",
+      "sha256": "3d1e870c9fbffba176d2b0168c872918eb04756d4faa0a3e15bf031298428908"
+    },
+    "h6": {
+      "name": "supervised_h6.csv",
+      "sha256": "f58658ce9ea7b5d56fd51fb14562a2a3690f321830193e64b3e749ac16a74d98"
+    },
+    "weather": {
+      "name": "historical_weathear_datase_bruto.csv",
+      "sha256": "639660b96e73581156deffef3ef2e198325462c2a723c032403ca4302e34f660"
+    }
+  },
+  "verified_on": "2026-11-24",
+  "scope": "Verificações independentes dos CSV fornecidos pelo autor; não autenticam a origem física nem comprovam desempenho preditivo."
+}
