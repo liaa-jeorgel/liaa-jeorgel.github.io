@@ -205,3 +205,131 @@ Para editar, actualizar as sínteses curtas no mapa e os textos detalhados na ta
 ## Etapas em cartões expansíveis
 
 «Como o projecto funciona» usa oito cartões, em quatro colunas no computador, duas em larguras intermédias e uma no telemóvel. Número, título, resumo e estado permanecem visíveis. Seleccionar um cartão abre entradas, operação, saídas, verificação e fontes; seleccionar outro fecha o anterior. Os cartões usam `details/summary` nativos com o mesmo atributo `name`, mais compatibilidade JavaScript para exclusividade. Funcionam também sem JavaScript. Os IDs das etapas foram preservados e as ligações directas abrem o cartão correspondente.
+
+## Detalhes das etapas em modal
+
+Com JavaScript, seleccionar um cartão abre um `dialog` nativo com título, estado, resumo, entradas, operações, saídas, verificação e fontes. Os conteúdos são derivados do HTML do próprio cartão. Fecho pelo botão, Escape ou gesto fora da janela; Tab e Shift+Tab circulam no diálogo e o foco regressa ao cartão. Uma ligação para uma etapa abre a modal correspondente; ligações de suporte fecham a modal antes da navegação. Sem JavaScript, os detalhes nativos continuam expansíveis no cartão. Não há novas dependências.
+
+## Percurso didáctico da evolução
+
+«A evolução do projecto» começa por um percurso com seis apontadores desde a definição do problema até à actividade actual, mais um apontador separado para a próxima fase planeada. Cada fase explica o que foi feito e o seu significado. O estado actual tem `aria-current="step"`, rótulo «Estou aqui» e destaque visual; não há percentagens de progresso.
+
+A ordem é metodológica e não pretende substituir uma cronologia documental completa. Apenas as entregas de 28 e 29/10/2026 recebem datas. A preparação e o marco de consolidação mantêm a indicação de data não documentada. Os registos completos existentes foram preservados abaixo, com ligações desde o percurso, e as etapas continuam a abrir as respectivas modais.
+
+## Evolução em cartões e modal
+
+O percurso de evolução apresenta sete cartões ordenados (seis marcos e próximo passo), em três colunas no computador, duas nas larguras intermédias e uma no telemóvel. Número, data ou indicação de ausência de data, título e resumo ficam visíveis. A actividade actual mantém «Estou aqui» e o próximo passo é identificado como planeado.
+
+A selecção abre os detalhes na mesma modal nativa das etapas, preservando os controlos de foco e fecho. Os relatos completos abaixo do percurso permanecem disponíveis. Cada marco tem uma ligação directa `#evolucao-…`; sem JavaScript, os cartões continuam expansíveis por `details/summary`. Datas, estados e conteúdos científicos foram preservados.
+
+
+## Single Page com sobreposição entre secções
+
+Todo o conteúdo permanece numa única página contínua. Ao atravessar a fronteira de uma secção, um overlay translúcido aparece e desaparece em 480 ms, acompanhado de uma entrada vertical subtil do título. Não há rotações, simulação de páginas, captura de scroll ou carregamento fictício de conteúdo.
+
+A camada fica abaixo do menu, não recebe cliques e desaparece ao terminar. Saltos de navegação e scroll nos dois sentidos usam a mesma transição. O último conteúdo termina normalmente no rodapé, sem repetição automática. Movimento reduzido, pausa global, conteúdo sem JavaScript e os detalhes em modal são preservados.
+
+## Página educativa PM2.5 — 17/11/2026
+
+`pm25.html` é uma página estática interna, aberta na mesma aba pelo botão **Conhecer melhor o PM2.5** no Contexto de `index.html`. O caminho de navegação e as ligações de regresso apontam para `index.html#contexto`; a proposta de solução aponta para `index.html#proposta`.
+
+### Conteúdo e edição
+
+O autor forneceu, após a clarificação inicial, o texto integral e as cinco referências. Os dez blocos de texto foram preservados, incluindo os parágrafos sobre Luanda, a tabela OMS, a data de consulta indicada e o DOI. Os parágrafos originais têm atributos `data-original` para facilitar a revisão; as explicações complementares foram acrescentadas separadamente. Não se transformou o conteúdo num resumo.
+
+A estrutura tem apresentação, definição, origens, saúde, interpretação, relação com Luanda e referências. O índice é lateral e acompanha a leitura no computador; torna-se expansível no telemóvel. O conteúdo principal permanece visível sem JavaScript. Os dois percursos de formação usam texto e setas HTML, evitando um esquema dimensional sem escala. Não há semáforos, calculadoras ou previsões simuladas.
+
+Editar o conteúdo em `pm25.html`. Manter as citações `[1]` a `[5]`, os IDs `ref-N` e as ligações de regresso correspondentes. As referências conservam títulos, instituições/autores, anos fornecidos, descrições e DOI. Não acrescentar `utm_source` aos links. Ao alterar as citações, actualizar também os backlinks.
+
+### Ficheiros e reutilização
+
+- `assets/style.css`: identidade partilhada e entrada curta no Contexto.
+- `assets/education.css`: coluna de leitura com máximo de 72ch, índice, diagramas textuais, tabela e destaques.
+- `assets/education.js`: índice responsivo, secção corrente, cabeçalho móvel e destinos de âncora acessíveis.
+- `assets/reading-progress.js`: componente de leitura extraído de `assets/main.js` e carregado por ambas as páginas, sem duplicação de lógica.
+- `assets/main.js`: mantém os comportamentos da página principal; a barra é agora inicializada pelo componente partilhado.
+
+Pode abrir-se directamente `pm25.html` ou usar o servidor local já documentado. Não existe build nem nova dependência. Os caminhos relativos funcionam no servidor local e no GitHub Pages a partir da raiz.
+
+### Preservação e verificação bibliográfica
+
+A frase **“Fontes consultadas em 17 de novembro de 2026.”** é informação fornecida pelo autor e foi preservada como tal, com nota visível que distingue essa data da verificação desta implementação.
+
+A verificação do agente, também em 17/11/2026, está discriminada em `VERIFICACAO.md`. A referência IARC foi preservada com **2016**, conforme o original; o catálogo consultado em `https://publications.iarc.who.int/538` apresenta **2015**. Esta divergência fica registada para revisão bibliográfica, sem alterar silenciosamente o texto fornecido. O DOI e o endereço NEJM foram preservados mesmo quando a ferramenta de consulta encontrou restrições; o manuscrito no PMC foi efectivamente aberto como acesso alternativo ao mesmo artigo.
+
+Não houve commit, push ou publicação nesta tarefa.
+
+## Vistas C4 e navegação arquitectural — 17/11/2026
+
+A secção `#como-funciona`, intitulada **Como o projecto funciona**, fica imediatamente depois de `#inicio` e antes de `#contexto`. O menu inclui «Como funciona». O bloco metodológico anterior foi mantido em `#metodologia`, agora com o título **Etapas metodológicas**, evitando dois títulos iguais.
+
+### Âmbito e entidades
+
+A vista de contexto representa **uma única aplicação local de preparação**, o investigador **Jeorgel Chitende** e a **OpenWeather como origem externa dos ficheiros**. A fronteira tracejada envolve apenas a aplicação. As etapas de preparação são operações do mesmo sistema, não sistemas/contentores inventados. Não se desenham bases de dados, serviços cloud, sensores, perfis adicionais ou componentes de modelação.
+
+O diagrama distingue a proveniência OpenWeather → investigador, a importação/configuração investigador → aplicação e o retorno de resultados aplicação → investigador. A ligação da origem não afirma uma chamada automática da aplicação à API. O site académico continua separado da aplicação de processamento.
+
+A vista dinâmica adopta o estilo de sequência C4 ao nível de sistemas, com **oito interacções**:
+
+1. Importar PM2.5 JSON/CSV.
+2. Solicitar explicitamente diagnóstico e preparação.
+3. Consultar a série de PM2.5 preparada e as verificações.
+4. Importar e solicitar validação da meteorologia.
+5. Configurar e solicitar integração e construção temporal.
+6. Consultar atributos, alvos e elegibilidade com proveniência.
+7. Solicitar exportações.
+8. Receber CSV/JSON/PDF, conforme o estado dos artefactos.
+
+É um cenário lógico bem-sucedido, não um registo de execução ou auditoria. Os bloqueios não são ignorados: fontes não aprovadas exigem resolução e nova validação. A modelação futura é uma nota separada, sem atribuir uma localização arquitectural não documentada.
+
+### Documentos usados e rastreabilidade
+
+Lidos em modo de consulta na aplicação separada, sem alterações:
+
+| Informação representada | Base documental |
+|---|---|
+| Aplicação local, importação de ficheiros, diagnóstico e preparação PM2.5, pedidos explícitos | README da aplicação `previsao-pm25-luanda` |
+| Snapshot, meteorologia validada, integração, atributos/alvos, artefactos verificados, CSV/JSON/PDF | `docs/implementacao_etapa3_incremento7.md`, de 28/10/2026 |
+| Preparação histórica concluída e série consolidada | Estado e resultados do relatório de consolidação fornecidos pelo autor e já publicados no conteúdo do site; o Word continua ausente |
+| Pessoa responsável e origem OpenWeather | Identificação e fonte principal fornecidas pelo autor, README da aplicação e conteúdo existente |
+| Âmbito da notação | https://c4model.com/diagrams/system-context e https://c4model.com/diagrams/dynamic, consultados em 17/11/2026 |
+
+O README da aplicação descreve o incremento de preparação PM2.5; o relatório de 28/10 documenta a engenharia multivariada posterior com fixtures. Não se confundem esses testes de engenharia com validação histórica. O estado científico actual continua a ser o marco de consolidação informado pelo autor.
+
+### Destinos e manutenção
+
+As entidades e relações ligam a explicações existentes ou complementos no próprio site:
+
+- Fontes e operações: `#etapa-aquisicao`, `#etapa-auditoria`, `#etapa-integracao`, `#etapa-serie`.
+- Sistema: `#sistema-preparacao`, dentro de Etapas metodológicas.
+- Papel: `#papel-investigador`, no Autor.
+- Exportações e materiais: `#materiais-preparacao`, antes da lista de materiais.
+- Fases planeadas: `#etapa-persistencia`, `#etapa-treino`, `#etapa-avaliacao`.
+
+Todos estes destinos explicitam **Finalidade, Entradas, Operações, Saídas, Verificações e Estado actual**. Nas etapas, os textos de entrada/operação/saída/verificação anteriores foram preservados e os campos de finalidade e estado acrescentados. Os links continuam a abrir as modais existentes; sem JavaScript, os detalhes nativos permanecem consultáveis.
+
+As entidades são HTML semântico com links; os SVG desenham ícones e setas. A vista de contexto dispõe ainda de descrição textual equivalente. Na vista dinâmica, a própria lista numerada contém a equivalência textual, incluindo os intervenientes e a direcção de cada interacção. O contexto passa a disposição vertical no telemóvel; não são necessárias imagens, bibliotecas ou chamadas de rede para renderizar as vistas.
+
+Ao acrescentar uma relação, confirmar primeiro o documento de suporte, o significado da seta e o destino. Manter IDs únicos também nos marcadores SVG; não atribuir um sistema independente a cada etapa metodológica.
+
+### Pendências arquitecturais
+
+- O percurso exacto de aquisição dos ficheiros fora da aplicação (manual, script, produto/encomenda e configuração) não está suficientemente documentado para um diagrama de runtime detalhado. A vista representa apenas a origem e a importação confirmadas.
+- Não há base nesta revisão para desenhar integração directa aplicação ↔ API OpenWeather, autenticação, agendamentos ou outros serviços externos.
+- A arquitectura de persistência preditiva, treino, validação e avaliação futura não está documentada; não foi inventado um módulo, contentor ou serviço para essas funções.
+- O Word de consolidação não foi disponibilizado; conserva-se a atribuição aos dados informados pelo autor, sem declarar nova leitura do documento.
+- As verificações do sistema são descritas a partir dos relatórios. Não foram reexecutadas suites, auditorias científicas ou medições operacionais da aplicação.
+
+Nenhuma alteração foi feita à aplicação separada, nenhum ficheiro técnico foi publicado como download e não houve commit, push ou publicação.
+
+### Etapas metodológicas em vista C4
+
+A grelha de oito cartões foi substituída por uma vista dinâmica ao nível de sistema: o investigador e a aplicação são os únicos participantes. Quatro interacções numeradas ligam importação, diagnóstico, integração e consulta da série às explicações existentes. As setas identificam pedido e retorno; não representam oito sistemas nem uma execução capturada. A aquisição externa continua sem ligação directa inventada à API.
+
+Persistência, treino, avaliação e relato mantêm-se numa sequência separada de ligações planeadas, sem atribuir-lhes arquitectura ainda não documentada. Os oito IDs e os seis campos de cada explicação foram preservados. O detalhe abre na modal existente; a alternativa textual usa `details` nativos, disponível sem JavaScript. Ao fechar a modal, o foco regressa à ligação de origem. O ajuste à navegação diferida impede que um callback de scroll retire esse foco.
+
+### Revisão de estrutura e navegação
+
+A ordem do menu acompanha as dez secções da página, incluindo “Como funciona” depois de “Resultados e materiais”. A numeração dos cabeçalhos foi alinhada com a do menu. O título “Resultados e materiais” identifica directamente o destino; a introdução de “Como funciona” distingue a arquitectura da aplicação do percurso metodológico.
+
+Abrir uma explicação em modal conserva a posição de leitura da página. O histórico do navegador acompanha as âncoras e fecha a janela quando regressa a uma secção. O menu móvel admite deslocamento vertical em ecrãs baixos, mantendo os destinos acessíveis.

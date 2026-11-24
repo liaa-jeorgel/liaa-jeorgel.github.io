@@ -9,6 +9,30 @@ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const motionToggle = document.querySelector('.motion-toggle');
 let motionPaused = false;
 const revealed = new WeakSet();
+const sectionOverlay = document.querySelector('.section-overlay');
+let previousSection = null;
+let previousScroll = window.scrollY;
+let overlayAnimation = null;
+function transitionSection(section, forward) {
+  if (!sectionOverlay || motionPaused || reducedMotion.matches || document.querySelector('.stage-modal[open]')) return;
+  overlayAnimation?.cancel();
+  sectionOverlay.hidden = false;
+  const shift = forward ? 18 : -18;
+  const animation = sectionOverlay.animate([
+    {opacity:0,transform:`translateY(${shift}px)`},
+    {opacity:.28,transform:'translateY(0)',offset:.4},
+    {opacity:0,transform:'translateY(0)'}
+  ],{duration:480,easing:'ease-out'});
+  overlayAnimation = animation;
+  animation.finished.catch(() => {}).then(() => {
+    if (overlayAnimation === animation) {sectionOverlay.hidden = true;overlayAnimation = null;}
+  });
+  const heading = section.querySelector('.section-heading, .hero-grid');
+  if (heading) heading.animate([
+    {opacity:.7,transform:`translateY(${forward ? 10 : -10}px)`},
+    {opacity:1,transform:'translateY(0)'}
+  ],{duration:400,easing:'ease-out'});
+}
 
 function enterPanel(panel) {
   if (motionPaused || reducedMotion.matches) return;
@@ -46,6 +70,18 @@ function showDestination(hash, focus = false) {
       else stageCard.open = true;
     }
   }
+  if (target.matches('.research-journey > li')) {
+    const journeyCard = target.querySelector('.journey-card');
+    if (journeyCard) {
+      if (document.documentElement.classList.contains('stage-modals-ready')) openJourneyModal(journeyCard);
+      else journeyCard.open = true;
+    }
+  }
+  // Um detalhe em modal preserva a posição e o contexto da leitura de fundo.
+  if (document.querySelector('.stage-modal[open]')) {
+    closeMenu();
+    return;
+  }
   // As secções permanecem visíveis numa página contínua.
   for (const link of navLinks) {
     if (link.hash === `#${panel.id}`) link.setAttribute('aria-current', 'location');
@@ -58,9 +94,10 @@ function showDestination(hash, focus = false) {
   }
   closeMenu();
   enterPanel(panel);
+  const destinationOpenedModal = Boolean(document.querySelector('.stage-modal[open]'));
   requestAnimationFrame(() => {
     target.scrollIntoView({ block: 'start', behavior: 'instant' });
-    if (focus && !document.querySelector('.stage-modal[open]')) {
+    if (focus && !destinationOpenedModal && !document.querySelector('.stage-modal[open]')) {
       const focusTarget = target.tagName === 'DETAILS' ? target.querySelector('summary') : target;
       if (!focusTarget.hasAttribute('tabindex')) focusTarget.setAttribute('tabindex', '-1');
       focusTarget.focus({ preventScroll: true });
@@ -129,8 +166,15 @@ document.addEventListener('click', event => {
   if (location.hash !== hash) history.pushState(null, '', hash);
   showDestination(hash, true);
 });
-window.addEventListener('popstate', () => showDestination(location.hash));
-window.addEventListener('hashchange', () => showDestination(location.hash));
+function followHistoryDestination() {
+  if (document.querySelector('.stage-modal[open]')) {
+    restoreStageFocus = false;
+    stageModal.close();
+  }
+  showDestination(location.hash);
+}
+window.addEventListener('popstate', followHistoryDestination);
+window.addEventListener('hashchange', followHistoryDestination);
 window.addEventListener('resize', updateOffset);
 mobile.addEventListener('change', closeMenu);
 if ('ResizeObserver' in window) new ResizeObserver(updateOffset).observe(header);
@@ -144,6 +188,9 @@ function updateCurrentSection() {
     if (link.hash === `#${active.id}`) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   }
+  if (previousSection && active !== previousSection) transitionSection(active, window.scrollY >= previousScroll);
+  previousSection = active;
+  previousScroll = window.scrollY;
   navigationFrame = false;
 }
 window.addEventListener('scroll', () => {
@@ -157,50 +204,6 @@ updateCurrentSection();
 enterPanel(panels[0]);
 if (location.hash) showDestination(location.hash);
 
-
-/* Progresso de leitura: no máximo uma medição por frame, sem alterar o layout. */
-const readingProgress = document.querySelector('.reading-progress');
-const readingFill = readingProgress.querySelector('.reading-progress-fill');
-let readingFrame = false;
-let readingPercent = -1;
-function updateReadingProgress() {
-  const scrolling = document.scrollingElement || document.documentElement;
-  const available = scrolling.scrollHeight - scrolling.clientHeight;
-  const ratio = available > 0 ? Math.min(1, Math.max(0, scrolling.scrollTop / available)) : 0;
-  readingProgress.hidden = available <= 0;
-  readingFill.style.transform = `scaleX(${ratio})`;
-  const percent = Math.round(ratio * 100);
-  if (percent !== readingPercent) {
-    readingProgress.setAttribute('aria-valuenow', String(percent));
-    readingPercent = percent;
-  }
-  readingFrame = false;
-}
-function scheduleReadingProgress() {
-  if (readingFrame) return;
-  readingFrame = true;
-  requestAnimationFrame(updateReadingProgress);
-}
-window.addEventListener('scroll', scheduleReadingProgress, { passive: true });
-window.addEventListener('resize', scheduleReadingProgress);
-window.addEventListener('pageshow', scheduleReadingProgress);
-window.visualViewport?.addEventListener('resize', scheduleReadingProgress);
-// Imagens diferidas, detalhes e alterações de conteúdo podem mudar a área de leitura.
-document.addEventListener('load', scheduleReadingProgress, true);
-if ('ResizeObserver' in window) {
-  const readingResizeObserver = new ResizeObserver(scheduleReadingProgress);
-  readingResizeObserver.observe(document.body);
-  readingResizeObserver.observe(document.documentElement);
-}
-if ('MutationObserver' in window) {
-  new MutationObserver(records => {
-    if (records.some(record => !readingProgress.contains(record.target))) scheduleReadingProgress();
-  }).observe(document.body, {
-    subtree: true, childList: true, characterData: true,
-    attributes: true, attributeFilter: ['open', 'hidden', 'class', 'style', 'src', 'width', 'height']
-  });
-}
-updateReadingProgress();
 
 /* Mapa comparativo: seleccionar uma coluna sem esconder a visão de conjunto. */
 const comparisonMap = document.querySelector('.comparison-map');
@@ -261,7 +264,11 @@ function openStageModal(card) {
     card.open = true;
     return;
   }
-  stageTrigger = card.querySelector('summary');
+  if (!stageModal.open) {
+    stageTrigger = document.activeElement?.matches('a[href^="#etapa-"]')
+      ? document.activeElement : card.querySelector('summary');
+  }
+  stageModal.querySelector('.stage-modal-close').setAttribute('aria-label', 'Fechar detalhes da etapa');
   restoreStageFocus = true;
   stageModal.querySelector('.stage-modal-number').textContent = `ETAPA ${card.querySelector('.step').textContent}`;
   stageModal.querySelector('#stage-modal-title').textContent = card.querySelector('h3').textContent;
@@ -274,6 +281,21 @@ function openStageModal(card) {
 }
 if (stageModal && typeof stageModal.showModal === 'function') {
   document.documentElement.classList.add('stage-modals-ready');
+  stageModal.addEventListener('keydown', event => {
+    if (event.key !== 'Tab') return;
+    const focusable = [...stageModal.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), [tabindex="0"]')]
+      .filter(item => item.getClientRects().length);
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
   for (const card of stageCards) {
     card.querySelector('summary').addEventListener('click', event => {
       event.preventDefault();
@@ -304,4 +326,42 @@ if (stageModal && typeof stageModal.showModal === 'function') {
   let initialStage;
   try { initialStage = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch {}
   if (initialStage?.matches('.process-list>li')) openStageModal(initialStage.querySelector('.stage-card'));
+}
+
+/* O percurso usa a mesma modal acessível das etapas, com conteúdo próprio. */
+function openJourneyModal(card) {
+  if (!stageModal || typeof stageModal.showModal !== 'function') {
+    card.open = true;
+    return;
+  }
+  if (!stageModal.open) {
+    stageTrigger = document.activeElement?.matches('a[href^="#etapa-"]')
+      ? document.activeElement : card.querySelector('summary');
+  }
+  restoreStageFocus = true;
+  stageModal.querySelector('.stage-modal-close').setAttribute('aria-label', 'Fechar detalhes do marco');
+  const meta = card.querySelector('.journey-meta');
+  stageModal.querySelector('.stage-modal-number').textContent = meta.textContent;
+  stageModal.querySelector('#stage-modal-title').textContent = card.querySelector('h3').textContent;
+  const status = document.createElement('span');
+  status.className = 'status';
+  status.textContent = card.querySelector('.journey-card-state').textContent;
+  if (!card.closest('.journey-planned')) status.classList.add('complete');
+  stageModal.querySelector('.stage-modal-status').replaceChildren(status);
+  stageModal.querySelector('.stage-modal-description').textContent = card.querySelector('.journey-card-description').textContent;
+  stageModal.querySelector('.stage-modal-content').replaceChildren(...[...card.querySelector('.journey-card-body').children].map(item => item.cloneNode(true)));
+  card.open = false;
+  if (!stageModal.open) stageModal.showModal();
+  stageModal.scrollTop = 0;
+}
+if (document.documentElement.classList.contains('stage-modals-ready')) {
+  for (const card of document.querySelectorAll('.journey-card')) {
+    card.querySelector('summary').addEventListener('click', event => {
+      event.preventDefault();
+      openJourneyModal(card);
+    });
+  }
+  let initialJourney;
+  try { initialJourney = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch {}
+  if (initialJourney?.matches('.research-journey>li')) openJourneyModal(initialJourney.querySelector('.journey-card'));
 }

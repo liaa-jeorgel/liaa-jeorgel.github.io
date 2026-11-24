@@ -144,3 +144,115 @@ Chromium a 360, 768 e 1440 px: cinco colunas de projectos, quatro dimensões, se
 ## Cartões das etapas metodológicas
 
 Chromium a 360/768/1440 px: oito cartões, quatro estados concluídos e quatro planeados; Enter abre o cartão; outra selecção mantém apenas um aberto; quatro campos de detalhe preservados; ligação aos critérios funcional e ligação directa à auditoria abre os detalhes. Sem erros JavaScript ou deslocamento horizontal. Sem JavaScript, abertura e exclusividade nativas confirmadas. Toque confirmado num contexto móvel emulado. Captura de 1440 px inspeccionada. IDs/âncoras, sintaxe e diff verificados. Conteúdo científico preservado, sem publicação.
+
+## Modal das etapas
+
+A primeira tentativa de teste foi impedida por falha da revisão automática de autorização por limite de utilização. Após o pedido do autor para avançar, a nova tentativa foi autorizada. O primeiro teste detectou que a circulação nativa de Tab podia sair do conteúdo do diálogo; foi acrescentado controlo explícito de Tab/Shift+Tab.
+
+Execução final em Chromium a 360, 768 e 1440 px: Enter abre a modal; cartões mantêm-se fechados; quatro dimensões de detalhe presentes; foco por Tab permanece na janela; Escape fecha e devolve foco; botão e clique fora fecham; ligação directa para uma etapa abre a modal; fonte interna fecha a janela e abre os critérios. Sem erros JavaScript ou scroll horizontal. Sintaxe JavaScript e diff verificados. Sem publicação.
+
+## Evolução didáctica com apontadores
+
+Chromium a 360/768/1440 px: sete apontadores (seis fases e próximo passo), apenas um estado actual com `aria-current="step"`, duas datas no percurso e próximo passo explicitamente planeado. Enter numa ligação abre o relato da exportação; ligação da actividade actual abre a modal da série multivariada. Sem erros JavaScript ou deslocamento horizontal. Sem JavaScript, o percurso continua disponível. Captura de 1440 px inspeccionada. IDs/âncoras, sintaxe JavaScript e diff verificados. Não foram criadas datas ou métricas; os registos documentais existentes foram preservados. Sem publicação.
+
+## Cartões e modal na evolução
+
+O percurso de evolução usa sete cartões com resumo, indicação de data, estado actual e próximo passo. Detalhes abrem na modal partilhada com as etapas; relatos completos e IDs existentes mantidos, com novos IDs permanentes nos marcos.
+
+A primeira autorização de teste excedeu o prazo sem executar o comando. A repetição permitida foi autorizada e executada em Chromium a 360, 768 e 1440 px. Confirmados: sete cartões; Enter abre modal; data 28/10/2026 preservada; Tab contido; Escape fecha e devolve foco; estado «Estou aqui» correcto; ligação da modal da evolução abre a modal da série temporal; ligação directa ao marco abre a janela; fonte abre o relato de 29/10. Sem erros de página ou scroll horizontal. Sintaxe JavaScript, IDs/âncoras e diff verificados. Não foi repetido teste sem JavaScript nesta revisão. Sem publicação.
+
+## Single Page e overlay entre secções
+
+Removidos elemento, estilos, estado e função do efeito de livro; verificação estática confirma ausência de `book-folio`, `turnBookPage`, `lastBook`, `rotateY` e `skewY` nos ficheiros de execução. Conteúdo mantido numa única página contínua.
+
+Chromium a 360/768/1440 px: nove secções visíveis; overlay activado ao atravessar a fronteira Início/Contexto e no regresso; keyframes sem rotação, skew ou perspectiva; camada sem intercepção de cliques e abaixo do menu; desaparecimento ao terminar; ausência de scroll horizontal e erros de página. Movimento reduzido impede a activação. Navegação até ao rodapé confirmada com progresso de leitura a 100%. IDs, âncoras, sintaxe e diff passaram. Sem publicação.
+
+## Página educativa PM2.5 — 17/11/2026
+
+### Preservação e rigor
+
+- O anexo inicial continha requisitos, mas não o texto integral. Após clarificação, o autor forneceu os parágrafos e as cinco referências; a implementação usa esse conteúdo, não uma substituição editorial.
+- Dez blocos de texto comparados automaticamente, normalizando espaços, com os parágrafos fornecidos: definição, origens, composição, saúde, estudo de Di, unidade, introdução às directrizes, percentil e dois parágrafos de Luanda. Todos presentes integralmente. Cinco referências completas, descrições, data fornecida e DOI confirmados no HTML.
+- Definição aerodinâmica preservada; distinções µm/µg/m³ e horizonte/agregação explícitas. Tabela: média anual 5 µg/m³, média de 24 h 15 µg/m³. Preservadas as notas do percentil 99, três a quatro dias, protecção da saúde versus limites legais e impossibilidade de aplicar directamente os valores a concentrações horárias.
+- Grupo 1 explicado como evidência de carcinogenicidade, sem escala de intensidade de risco. Estudo de Di identificado como exposição prolongada em aproximadamente 61 milhões de beneficiários do Medicare nos EUA, sem extrapolação quantitativa para Luanda. Horizontes 1/3/6 h identificados como objectivos da investigação.
+
+### Fontes: verificação do agente em 17/11/2026
+
+Esta lista é independente da frase de data de consulta fornecida pelo autor:
+
+1. EPA, *Particulate Matter (PM) Basics*: página efectivamente aberta e conteúdo lido. Apresenta actualização de 18/09/2026; não se inventou um ano de publicação para a referência fornecida, que não o indicava.
+2. WHO, directrizes 2021: página institucional `https://www.who.int/publications/i/item/9789240034228` aberta e título/ano confirmados. Q&A oficial das directrizes também consultado, incluindo a nota de percentil 99. O PDF IRIS e a tabela NCBI encontraram, respectivamente, 403 e verificação de navegador; não se afirma leitura integral desses recursos nesta revisão. Valores da tabela do autor preservados.
+3. WHO, *Ambient (outdoor) air pollution*: página aberta, título e data 24/10/2024 confirmados. Página institucional complementar sobre tipos de poluentes também aberta para definição/composição; não foi acrescentada como sexta referência à bibliografia original.
+4. IARC, *Outdoor Air Pollution*, volume 109: catálogo numérico `https://publications.iarc.who.int/538` aberto e título/volume confirmados. Catálogo indica 2015, enquanto o texto fornecido indica 2016; referência mantida como fornecida, divergência registada para revisão. Uma tentativa com um slug terminado em 2016 devolveu outro livro e foi descartada. O comunicado IARC de 2013 foi efectivamente aberto para a definição de Grupo 1.
+5. Di et al.: artigo completo em `https://pmc.ncbi.nlm.nih.gov/articles/PMC5766848/` efectivamente aberto e autores, DOI, 2017 e coorte de 60.925.443 confirmados. A abertura directa do PubMed devolveu conteúdo incompleto e o DOI devolveu 403 pela ferramenta; não se declara acesso integral por esses destinos. Links originais mantidos, com alternativa PMC. Nenhum resultado numérico adicional foi transposto para o projecto de Luanda.
+
+### Testes da página e integração
+
+- Chromium/Playwright a 360, 768 e 1440 px, em claro e escuro, com movimento reduzido: botão do Contexto abre `pm25.html` na mesma aba; recarregamento directo funcional; um H1; sete secções e sete destinos do índice; cinco referências.
+- Índice móvel inicialmente compacto, aberto por Enter. Destino Concentrações abaixo do cabeçalho; tabela comparada exactamente com os valores fornecidos. Citação [2] leva a `ref-2` e o regresso retoma a passagem citada com foco. Sem erros JavaScript de página ou scroll horizontal.
+- Barra partilhada a 0% no topo e 100% no fundo, posicionada abaixo do cabeçalho. Regresso ao Contexto funcional nos seis cenários.
+- Sem JavaScript a 360 e 1440 px: sete secções visíveis, índice e percursos de formação disponíveis, navegação por âncoras e ausência de scroll horizontal.
+- Servidor HTTP efémero em loopback: entrada pelo Contexto, recarregamento de `/pm25.html`, HTML/CSS/JS sem respostas locais 4xx/5xx. Também confirmadas a modal de série temporal da página principal e a barra partilhada a 100%. Servidor encerrado após o teste.
+- Capturas claras de 1440/360 px do início, saúde e interpretação inspeccionadas. Corrigida duplicação de indicadores no summary do índice. Sem nova auditoria visual integral de todas as secções em cada largura.
+- Parser: IDs únicos nas duas páginas (52 na principal; 28 na educativa), recursos e âncoras locais resolvidos, ausência de parâmetros `utm_source`. Todas as citações e backlinks apontam para IDs existentes.
+- Sintaxe dos três scripts (`main.js`, `education.js`, `reading-progress.js`) e `git diff --check` passaram. Lighthouse não encontrado por `command -v lighthouse`; não executado. Sem teste com leitor de ecrã ou utilizadores.
+
+Nenhuma publicação, commit ou push realizado.
+
+## Vistas de contexto e dinâmica C4 — 17/11/2026
+
+### Inspecção e bases
+
+Inspeccionados HTML, CSS, JavaScript e documentação existentes no repositório do site; lidos também, apenas em consulta, o README da aplicação separada e passagens do relatório `implementacao_etapa3_incremento7.md`. Referências oficiais C4 de contexto e dinâmica abertas pela ferramenta web. As fases metodológicas não são representadas como contentores; não se infere integração directa com a API, sensores locais ou arquitectura dos modelos futuros.
+
+As operações de preparação e exportação têm suporte documental. A conclusão histórica da preparação mantém a atribuição ao marco informado pelo autor. As limitações e pendências arquitecturais estão no README.
+
+### Testes efectivamente executados
+
+- Chromium/Playwright em seis cenários: 360/768/1440 px × claro/escuro, com movimento reduzido.
+- Nova secção imediatamente depois de Início e antes do Contexto; título «Como o projecto funciona» único. Secção metodológica e IDs anteriores preservados.
+- Vista de contexto: três entidades (fonte externa, pessoa e aplicação), uma aplicação dentro da fronteira. Vista dinâmica: oito interacções numeradas; fontes, intervenientes, sentido e operação legíveis em texto.
+- Primeiro teste já verificou os seis cenários. Revisão visual posterior explicitou o pedido de diagnóstico/preparação para não sugerir execução automática e alongou as setas entre as linhas dos participantes. A suite completa foi repetida após estes ajustes, com sucesso.
+- Link de fonte activado por foco/Enter abre a modal existente. Todos os destinos internos distintos dos diagramas foram percorridos: etapas e fases futuras abrem as modais; papel, sistema e materiais abrem os detalhes correctos; seis campos confirmados em cada destino.
+- Nos destinos fora de modal, título/summary permanece abaixo do cabeçalho. Sem erros JavaScript de página ou scroll horizontal.
+- Sem JavaScript a 360/1440 px: ambas as vistas e a lista numerada disponíveis; link de fonte navega para a etapa; detalhe nativo abre e contém os seis campos. Sem scroll horizontal.
+- Capturas geradas em todos os cenários; inspeccionadas as vistas clara/1440 de contexto e dinâmica e clara/360 de contexto e dinâmica. Não houve inspecção visual detalhada de todas as secções em todas as cores/larguras.
+- Parser: `index.html` com 69 IDs únicos e 112 referências; `pm25.html` com 28 IDs e 52 referências. Âncoras e ficheiros locais válidos, incluindo marcadores SVG. Sem alteração no conteúdo da página educativa.
+- Sintaxe de `main.js`, `education.js` e `reading-progress.js` e `git diff --check`: passaram. Não houve necessidade de novo JavaScript para os diagramas.
+- HTML principal + todos os assets: 250.590 bytes sem compressão, antes das alterações de documentação. É soma de ficheiros, não medição de transferência em navegador.
+
+### Limites
+
+Não foram executados Lighthouse, leitor de ecrã ou testes com utilizadores nesta revisão. Não foram testadas a aplicação de processamento, chamadas à OpenWeather, exportações reais ou auditorias científicas. As medições de desempenho operacional e a arquitectura das fases futuras permanecem pendentes. Não houve commit, push ou publicação.
+
+## Revisão — substituição dos cartões metodológicos por vista C4
+
+Verificações executadas em Chromium local, com Playwright, em 360, 768 e 1440 px, com e sem JavaScript e preferência de movimento reduzido:
+
+- Oito ligações do novo percurso conduzem aos detalhes correspondentes. Com JavaScript, Enter abre a modal; os seis campos estão presentes e Escape restitui o foco à ligação de origem.
+- Sem JavaScript, a navegação por âncora revela os detalhes textuais; cada descrição pode abrir pelo controlo nativo.
+- Nenhum scroll horizontal nos seis cenários; nenhum erro JavaScript de página.
+- Sintaxe de JavaScript e `git diff --check` verificadas nesta revisão.
+
+A vista mantém um investigador e um sistema; as quatro fases futuras são ligações metodológicas, sem arquitectura inventada. Permanecem pendentes testes com leitor de ecrã, outros motores de navegador e utilizadores. Não foram reexecutadas verificações científicas nem alterada a aplicação separada. Sem publicação ou envio ao GitHub.
+- Inspecção visual das capturas de 360 e 1440 px: participantes, numeração, sentidos das relações e texto legíveis; a identidade cromática e tipográfica foi preservada.
+
+## Revisão de UI e UX — estrutura e navegação
+
+Executado nesta revisão, em Chromium local:
+
+- Dez destinos do menu em 320, 360, 768, 1024 e 1440 px: ordem coerente com as secções, indicação de secção activa correcta, destinos abaixo do cabeçalho, sem scroll horizontal da página e sem erros JavaScript.
+- Em 360/1440 px: abertura de detalhes C4 conserva a posição de fundo; Escape devolve o foco à ligação original. Voltar entre dois detalhes reabre o detalhe anterior e Voltar à secção fecha a modal. Setas do teclado no mapa comparativo mudam o foco e o projecto seleccionado.
+- Menu em 568 × 260 px: último destino alcançável; Escape fecha o menu e devolve o foco ao botão.
+- Regressão dos oito destinos metodológicos em 360/768/1440 px, com e sem JavaScript: seis campos preservados e descrições nativas acessíveis. Testes com preferência de movimento reduzido.
+- Inspecção visual da captura do menu aberto em 320 px: nomes legíveis e hierarquia preservada.
+
+Ajustados: numeração antiga das secções, reconhecimento do destino “Resultados e materiais”, distinção entre arquitectura e metodologia, deslocamento desnecessário do fundo ao abrir modais e tratamento de histórico com janela aberta. O conteúdo científico foi preservado. Estes testes são uma revisão técnica de usabilidade; não substituem testes com utilizadores, leitor de ecrã ou uma auditoria completa de acessibilidade. Outros motores de navegador permanecem pendentes.
+
+## Botão flutuante da aplicação — 23/11/2026
+
+Adicionado acesso “Abrir aplicação” na página principal e na página educativa. O destino é o endereço HTTP fornecido pelo autor, com `#preparacao`; abre numa nova aba, indicada no nome acessível. Não requer JavaScript. Foram verificados em Chromium local, sem JavaScript, a 320 e 1440 px: URL exacto, foco por teclado, área de toque mínima de 44 px, posição fixa no início e no fim da página e ausência de scroll horizontal. Inspeccionada a captura do rodapé a 320 px. A disponibilidade do serviço remoto não foi testada. Nenhuma publicação realizada.
+
+### Refinamento visual do acesso à aplicação
+
+Texto alterado para “Explorar dados de PM2.5”, com indicação visível “Abrir aplicação · nova aba”. Ícone SVG conceptual com partículas e traçado de sinal; não representa uma medição em tempo real. As animações de entrada terminam em menos de cinco segundos, o foco/hover realça o sinal, e a regra de movimento reduzido desactiva os efeitos. O controlo geral de pausa do site também se aplica às animações CSS. Repetidas as verificações locais em 320/1440 px, nas duas páginas: destino preservado, foco acessível, botão dentro do ecrã no início/fim, sem scroll horizontal. Captura de 320 px inspeccionada. Sem publicação.
